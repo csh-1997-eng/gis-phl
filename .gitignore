@@ -172,3 +172,38 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+
+# AI Rules - PRIVATE
+rules/BASE_RULES.md
+rules/skills/
+/.cursor/rules/
+/CLAUDE.md
+/AGENTS.md
+
+
+# large/local datasets
+data/
+data/raw/
+data/processed/
+*.tif
+*.gpkg
+*.shp
+*.dbf
+*.prj
+*.cpg
+*.geojson
+*.mbtiles
+# ingestion outputs and local datasets
+data/external/
+data/interim/
+data/tmp/
+
+# ingestion local probe staging
+ingestion/tmp/
+
+# exploration notebook exports
+exploration/tmp/
+
+# large local artifacts
+gis_proto/philly_parcels.html

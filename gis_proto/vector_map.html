@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Parcel Vector Tiles</title>
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet/dist/leaflet.css"
+  />
+  <style>
+    #map { height:100vh; width:100%; }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <!-- VectorGrid plugin bundled build -->
+  <script src="https://unpkg.com/leaflet.vectorgrid/dist/Leaflet.VectorGrid.bundled.js"></script>
+  <script>
+    // 1) Initialize your base map
+    var map = L.map('map').setView([39.95, -75.17], 12);
+    L.tileLayer(
+      'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
+      { attribution: 'CartoDB' }
+    ).addTo(map);
+
+    // 2) Define a style function (you could tie to a color scale)
+    function parcelStyle(properties) {
+      // e.g. simple fill-opacity based on price
+      var p = properties.pred_price;
+      var alpha = Math.min(1, Math.max(0.2, (p - 100000) / 400000));
+      return {
+        weight: 0.5,
+        color: 'black',
+        fill: true,
+        fillColor: '#3388ff',
+        fillOpacity: alpha
+      };
+    }
+
+    // 3) Add vector tiles layer
+    L.vectorGrid.protobuf(
+      'http://localhost:8080/data/parcels/{z}/{x}/{y}.pbf',
+      {
+        rendererFactory: L.canvas.tile,
+        vectorTileLayerStyles: {
+          // layer name matches what tippecanoe produced, often 'parcels'
+          parcels: parcelStyle
+        },
+        interactive: true,
+        getFeatureId: function(f) { return f.properties.parcel_number; }
+      }
+    ).addTo(map);
+
+    // 4) Optional: hover popup
+    map.on('click', function(e) {
+      // use leaflet-pip or your own logic to query the clicked tile’s features…
+    });
+  </script>
+</body>
+</html>
