@@ -7,7 +7,13 @@ Source-specific ingestion contract.
 - inspect request/response structure
 - capture minimal sample payloads for schema understanding
 
-## Next Steps
-- add `probe.py` endpoint checks
-- add `parse.py` row/payload normalization helpers
-- connect mapper output to `ingestion/ontology/`
+## Current Probe Coverage
+- Zillow research portal metadata page
+- ZORI methodology page
+- ZORI CSV samples for:
+  - `metro`
+  - `city`
+  - `zip`
+
+## Notes
+- Probe files are byte-limited samples for schema checks, not full extracts.

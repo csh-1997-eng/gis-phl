@@ -35,6 +35,14 @@ def directional_accuracy(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     return float(np.mean(np.sign(y_true) == np.sign(y_pred)))
 
 
+def spearman_corr(y_true: np.ndarray, y_pred: np.ndarray) -> float:
+    """Spearman rank correlation without external dependencies."""
+    s_true = pd.Series(y_true).rank(method="average")
+    s_pred = pd.Series(y_pred).rank(method="average")
+    corr = s_true.corr(s_pred, method="pearson")
+    return float(corr) if corr is not None else float("nan")
+
+
 def fit_linear_regression(X: np.ndarray, y: np.ndarray) -> np.ndarray:
     # Add intercept term and solve ordinary least squares via lstsq.
     X_design = np.column_stack([np.ones(len(X)), X])
@@ -84,11 +92,13 @@ def evaluate_split(df: pd.DataFrame, train_end_date: str) -> dict:
             "mae": mae(y_val, y_pred_naive),
             "rmse": rmse(y_val, y_pred_naive),
             "directional_accuracy": directional_accuracy(y_val, y_pred_naive),
+            "spearman_corr": spearman_corr(y_val, y_pred_naive),
         },
         "linear_regression": {
             "mae": mae(y_val, y_pred_linear),
             "rmse": rmse(y_val, y_pred_linear),
             "directional_accuracy": directional_accuracy(y_val, y_pred_linear),
+            "spearman_corr": spearman_corr(y_val, y_pred_linear),
         },
     }
 

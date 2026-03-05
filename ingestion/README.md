@@ -57,6 +57,42 @@ Outputs:
 - `ingestion/tmp/entities/economic.csv`
 - `ingestion/tmp/entities/apartment_market.csv`
 
+`apartment_market.csv` now preserves Zillow geography metadata:
+- `region_type` (for example `msa`, `city`, `zip`)
+- `region_name`
+- `state_name`
+- `source_dataset`
+
+## Audit Geography Granularity
+
+Use this to verify how many geographies you have at each level and which Philadelphia geographies are available:
+
+```bash
+python ingestion/ontology/audit_geographic_granularity.py \
+  --apt-path ingestion/tmp/entities/apartment_market.csv \
+  --output-dir ingestion/tmp/entities
+```
+
+Outputs:
+- `ingestion/tmp/entities/granularity_summary.csv`
+- `ingestion/tmp/entities/philly_geographies.csv`
+
+## Find Expansion Candidates (City/MSA/ZIP)
+
+Use this to surface ZIP availability in surrounding states and rank nearby city/MSA/ZIP series by similarity to Philadelphia trends:
+
+```bash
+python ingestion/ontology/find_expansion_candidates.py \
+  --apt-path ingestion/tmp/entities/apartment_market.csv \
+  --output-dir ingestion/tmp/entities
+```
+
+Outputs:
+- `ingestion/tmp/entities/regional_zip_inventory.csv`
+- `ingestion/tmp/entities/nearest_cities_to_philly_city.csv`
+- `ingestion/tmp/entities/nearest_msas_to_philly_msa.csv`
+- `ingestion/tmp/entities/nearest_zips_to_philly_msa.csv`
+
 ## Manual Cleanup (Keep Entities Only)
 
 After building entities, remove probe artifacts to save disk space:

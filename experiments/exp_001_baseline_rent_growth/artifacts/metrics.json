@@ -11,11 +11,13 @@
   "naive_lag1": {
     "mae": 0.004246339890278633,
     "rmse": 0.0056363048324421395,
-    "directional_accuracy": 0.6907142857142857
+    "directional_accuracy": 0.6907142857142857,
+    "spearman_corr": 0.28715034621373353
   },
   "linear_regression": {
     "mae": 0.0034900286734716322,
     "rmse": 0.004441040683151646,
-    "directional_accuracy": 0.705
+    "directional_accuracy": 0.705,
+    "spearman_corr": 0.40931450621002513
   }
 }

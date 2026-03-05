@@ -38,6 +38,9 @@ def map_fred_row_to_economic(row: Dict[str, Any]) -> Dict[str, Any]:
 def map_zori_observation_to_apartment_market(
     region_id: str,
     region_name: str,
+    region_type: str,
+    state_name: str,
+    source_dataset: str,
     period: str,
     rent_index: float | None,
     prev_1m: float | None,
@@ -45,6 +48,7 @@ def map_zori_observation_to_apartment_market(
 ) -> Dict[str, Any]:
     """Map one Zillow ZORI region-period observation to apartment_market."""
     geo_slug = _slugify(region_name) if region_name else str(region_id)
+    region_type_slug = _slugify(region_type) if region_type else "unknown"
     rent_growth_1m = None
     rent_growth_12m = None
     if rent_index is not None and prev_1m not in (None, 0.0):
@@ -53,12 +57,17 @@ def map_zori_observation_to_apartment_market(
         rent_growth_12m = (rent_index / prev_12m) - 1.0
 
     return {
-        "entity_id": f"apt_market:{region_id}:{period}",
-        "geography_entity_id": f"geo:zori:{geo_slug}",
+        "entity_id": f"apt_market:{region_type_slug}:{region_id}:{period}",
+        "geography_entity_id": f"geo:zori:{region_type_slug}:{geo_slug}",
         "period": period,
         "rent_index": rent_index,
         "rent_growth_1m": rent_growth_1m,
         "rent_growth_12m": rent_growth_12m,
+        "region_id": region_id,
+        "region_name": region_name,
+        "region_type": region_type,
+        "state_name": state_name,
+        "source_dataset": source_dataset,
     }
 
 
@@ -74,8 +83,12 @@ def load_fred_entities_from_csv(csv_path: Path) -> List[Dict[str, Any]]:
     return rows
 
 
-def load_zori_apartment_market_entities_from_csv(csv_path: Path) -> List[Dict[str, Any]]:
+def load_zori_apartment_market_entities_from_csv(
+    csv_path: Path,
+    source_dataset: str | None = None,
+) -> List[Dict[str, Any]]:
     entities: List[Dict[str, Any]] = []
+    dataset_name = source_dataset or csv_path.name
     with csv_path.open("r", encoding="utf-8", newline="") as fp:
         reader = csv.DictReader(fp)
         if reader.fieldnames is None:
@@ -87,6 +100,8 @@ def load_zori_apartment_market_entities_from_csv(csv_path: Path) -> List[Dict[st
         for row in reader:
             region_id = str(row.get("RegionID", "")).strip()
             region_name = str(row.get("RegionName", "")).strip()
+            region_type = str(row.get("RegionType", "")).strip().lower()
+            state_name = str(row.get("StateName", "")).strip()
             values: List[float | None] = [_to_float(row.get(period)) for period in period_cols]
             for idx, period in enumerate(period_cols):
                 rent_index = values[idx]
@@ -96,6 +111,9 @@ def load_zori_apartment_market_entities_from_csv(csv_path: Path) -> List[Dict[st
                     map_zori_observation_to_apartment_market(
                         region_id=region_id,
                         region_name=region_name,
+                        region_type=region_type,
+                        state_name=state_name,
+                        source_dataset=dataset_name,
                         period=period,
                         rent_index=rent_index,
                         prev_1m=prev_1m,
@@ -148,11 +166,17 @@ def zori_geographic_entities(apartment_market_rows: Iterable[Dict[str, Any]]) ->
         geo_id = str(row.get("geography_entity_id", "")).strip()
         if not geo_id:
             continue
+        region_type = str(row.get("region_type", "")).strip() or "zori_region"
+        region_name = str(row.get("region_name", "")).strip()
+        state_name = str(row.get("state_name", "")).strip()
+        pretty_name = region_name
+        if state_name:
+            pretty_name = f"{region_name} ({state_name})" if region_name else state_name
         output.append(
             {
                 "entity_id": geo_id,
-                "geography_type": "zori_region",
-                "name": geo_id.replace("geo:zori:", "").replace("_", " ").title(),
+                "geography_type": f"zori_{region_type}",
+                "name": pretty_name or geo_id.replace("geo:zori:", "").replace("_", " ").title(),
                 "county_fips": None,
                 "state_fips": None,
             }

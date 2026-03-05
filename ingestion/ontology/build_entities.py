@@ -39,7 +39,26 @@ def load_ntad_geojson_features(geojson_path: Path) -> List[Dict[str, Any]]:
 def build_entities(source_dir: Path) -> Dict[str, List[Dict[str, Any]]]:
     fred_rows = load_fred_entities_from_csv(source_dir / "fred" / "philly_unemployment_head.csv")
 
-    apt_rows = load_zori_apartment_market_entities_from_csv(source_dir / "zillow" / "zori_head.csv")
+    apt_rows: List[Dict[str, Any]] = []
+    zillow_dir = source_dir / "zillow"
+    zori_files = sorted(zillow_dir.glob("*_zori_*.csv"))
+    legacy_file = zillow_dir / "zori_head.csv"
+
+    if legacy_file.exists():
+        zori_files.append(legacy_file)
+
+    if not zori_files:
+        raise FileNotFoundError(f"No Zillow ZORI sample CSVs found under {zillow_dir}")
+
+    for csv_path in zori_files:
+        apt_rows.extend(
+            load_zori_apartment_market_entities_from_csv(
+                csv_path,
+                source_dataset=csv_path.name,
+            )
+        )
+
+    apt_rows = unique_by_key(apt_rows, "entity_id")
 
     ntad_features = load_ntad_geojson_features(source_dir / "ntad_amtrak" / "amtrak_sample.geojson")
     amtrak_geo_rows = [map_ntad_feature_to_geographic(feat) for feat in ntad_features]
@@ -87,6 +106,11 @@ def main() -> int:
             "rent_index",
             "rent_growth_1m",
             "rent_growth_12m",
+            "region_id",
+            "region_name",
+            "region_type",
+            "state_name",
+            "source_dataset",
         ],
     )
     write_csv(

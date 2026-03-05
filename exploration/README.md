@@ -20,3 +20,20 @@ Everything related to EDA and source/entity understanding lives here.
 cd env
 make lab
 ```
+
+## Re-run Entity Exploration (Scripted)
+
+Use this when entity schemas evolve and you want deterministic CSV outputs without manually re-running notebook cells:
+
+```bash
+python exploration/scripts/run_entity_exploration.py \
+  --entities-dir ingestion/tmp/entities \
+  --output-dir exploration/tmp/notebook_exports/02_entity_sanity_checks
+```
+
+Exports include:
+- `table_summary.csv`
+- `apartment_market_granularity.csv`
+- `zip_panel_geographies.csv`
+- `zip_panel_state_summary.csv`
+- `schema_compat_report.csv`

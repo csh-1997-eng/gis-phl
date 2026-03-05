@@ -45,3 +45,11 @@ python experiments/exp_001_baseline_rent_growth/src/train.py \
   --artifacts-dir experiments/exp_001_baseline_rent_growth/artifacts \
   --train-end-date 2024-12-31
 ```
+
+## Evaluation (Cross-Experiment)
+
+Open:
+- `evaluation/notebooks/01_experiment_comparison.ipynb`
+
+This notebook compares `exp_001` / `exp_002` / `exp_003` and writes CSV outputs to:
+- `evaluation/tmp/notebook_exports/01_experiment_comparison/`

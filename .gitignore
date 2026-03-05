@@ -180,6 +180,7 @@ rules/skills/
 /.cursor/rules/
 /CLAUDE.md
 /AGENTS.md
+tmp/
 
 
 # large/local datasets
