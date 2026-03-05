@@ -1,0 +1,7 @@
+feature,weight
+intercept,0.0018277090864205967
+rent_growth_1m_lag1,0.6897771500752761
+rent_growth_1m_lag3,-0.4121852514763087
+rent_growth_1m_lag12,0.10632936433869644
+rent_index_lag1,4.3458064274675326e-07
+unemployment_rate,-4.829376123047081e-05

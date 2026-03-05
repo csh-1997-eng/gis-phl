@@ -1,0 +1,137 @@
+{
+  "scope": {
+    "region_type": "zip",
+    "states": [
+      "PA",
+      "NJ",
+      "DE"
+    ],
+    "min_history_months": 24
+  },
+  "holdout": {
+    "split": {
+      "train_rows": 1690,
+      "validation_rows": 336,
+      "train_min_period": "2016-02-29",
+      "train_max_period": "2024-12-31",
+      "validation_min_period": "2025-01-31",
+      "validation_max_period": "2025-11-30",
+      "train_end_date": "2024-12-31"
+    },
+    "naive_lag1": {
+      "mae": 0.012840828095703003,
+      "rmse": 0.016136396965128953,
+      "directional_accuracy": 0.5476190476190477,
+      "spearman_corr": 0.0705317203722802
+    },
+    "linear_regression": {
+      "mae": 0.009353588278049729,
+      "rmse": 0.01194002895193768,
+      "directional_accuracy": 0.5744047619047619,
+      "spearman_corr": 0.13267195181363212
+    }
+  },
+  "rolling": {
+    "n_folds_requested": 3,
+    "n_folds_executed": 3,
+    "folds": [
+      {
+        "split": {
+          "train_rows": 1824,
+          "validation_rows": 168,
+          "train_min_period": "2016-02-29",
+          "train_max_period": "2025-04-30",
+          "validation_min_period": "2025-05-31",
+          "validation_max_period": "2025-09-30",
+          "fold": 1,
+          "train_end_date": "2025-04-30",
+          "validation_end_date": "2025-10-30"
+        },
+        "naive_lag1": {
+          "mae": 0.012494672560273786,
+          "rmse": 0.015775126505585376,
+          "directional_accuracy": 0.5476190476190477,
+          "spearman_corr": 0.05131832699773742
+        },
+        "linear_regression": {
+          "mae": 0.009241065260967843,
+          "rmse": 0.011494774933265844,
+          "directional_accuracy": 0.5535714285714286,
+          "spearman_corr": 0.07597400296617249
+        }
+      },
+      {
+        "split": {
+          "train_rows": 1626,
+          "validation_rows": 198,
+          "train_min_period": "2016-02-29",
+          "train_max_period": "2024-10-31",
+          "validation_min_period": "2024-11-30",
+          "validation_max_period": "2025-04-30",
+          "fold": 2,
+          "train_end_date": "2024-10-31",
+          "validation_end_date": "2025-04-30"
+        },
+        "naive_lag1": {
+          "mae": 0.013525591014970221,
+          "rmse": 0.01711002846715894,
+          "directional_accuracy": 0.5303030303030303,
+          "spearman_corr": -0.02095928032718584
+        },
+        "linear_regression": {
+          "mae": 0.009287318516214092,
+          "rmse": 0.012024709326716855,
+          "directional_accuracy": 0.6313131313131313,
+          "spearman_corr": 0.06799340495741281
+        }
+      },
+      {
+        "split": {
+          "train_rows": 1437,
+          "validation_rows": 158,
+          "train_min_period": "2016-02-29",
+          "train_max_period": "2024-04-30",
+          "validation_min_period": "2024-05-31",
+          "validation_max_period": "2024-09-30",
+          "fold": 3,
+          "train_end_date": "2024-04-30",
+          "validation_end_date": "2024-10-30"
+        },
+        "naive_lag1": {
+          "mae": 0.010520255132917173,
+          "rmse": 0.012983970854061494,
+          "directional_accuracy": 0.5822784810126582,
+          "spearman_corr": 0.005401918890590986
+        },
+        "linear_regression": {
+          "mae": 0.007296826713229054,
+          "rmse": 0.009474007263047769,
+          "directional_accuracy": 0.6962025316455697,
+          "spearman_corr": -0.017361898140894092
+        }
+      }
+    ],
+    "aggregate": {
+      "naive_lag1": {
+        "mae_mean": 0.012180172902720393,
+        "mae_std": 0.0012469144496021086,
+        "rmse_mean": 0.01528970860893527,
+        "rmse_std": 0.0017190716016580977,
+        "directional_accuracy_mean": 0.5534001863115787,
+        "directional_accuracy_std": 0.0216090728253042,
+        "spearman_corr_mean": 0.011920321853714187,
+        "spearman_corr_std": 0.029865033211055703
+      },
+      "linear_regression": {
+        "mae_mean": 0.008608403496803663,
+        "mae_std": 0.0009276170493309386,
+        "rmse_mean": 0.010997830507676823,
+        "rmse_std": 0.0010990103354061888,
+        "directional_accuracy_mean": 0.6270290305100432,
+        "directional_accuracy_std": 0.05830764976001478,
+        "spearman_corr_mean": 0.04220183659423041,
+        "spearman_corr_std": 0.04224374792275232
+      }
+    }
+  }
+}
