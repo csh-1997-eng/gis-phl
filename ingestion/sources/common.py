@@ -10,8 +10,19 @@ from typing import Dict, List, Optional
 from urllib.parse import urljoin
 from urllib.request import Request, urlopen
 
-USER_AGENT = "gis-phl-minimal-ingest/0.2"
+USER_AGENT = (
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+    "AppleWebKit/537.36 (KHTML, like Gecko) "
+    "Chrome/122.0.0.0 Safari/537.36 "
+    "gis-phl-minimal-ingest/0.3"
+)
 TIMEOUT_SECONDS = 45
+DEFAULT_HEADERS = {
+    "User-Agent": USER_AGENT,
+    "Accept": "*/*",
+    "Accept-Language": "en-US,en;q=0.9",
+    "Cache-Control": "no-cache",
+}
 
 
 @dataclass
@@ -48,8 +59,11 @@ class TitleParser(HTMLParser):
         return " ".join(part.strip() for part in self.title_parts if part.strip())
 
 
-def http_get_bytes(url: str, max_bytes: Optional[int] = None) -> bytes:
-    req = Request(url, headers={"User-Agent": USER_AGENT})
+def http_get_bytes(url: str, max_bytes: Optional[int] = None, headers: Optional[Dict[str, str]] = None) -> bytes:
+    merged_headers = dict(DEFAULT_HEADERS)
+    if headers:
+        merged_headers.update(headers)
+    req = Request(url, headers=merged_headers)
     with urlopen(req, timeout=TIMEOUT_SECONDS) as resp:
         return resp.read() if max_bytes is None else resp.read(max_bytes)
 

@@ -9,9 +9,14 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+from sources.acs_5y.probe import probe as probe_acs_5y
+from sources.bls_labor_cpi.probe import probe as probe_bls_labor_cpi
 from sources.common import FetchResult
 from sources.fred.probe import probe as probe_fred
+from sources.hud_fmr.probe import probe as probe_hud_fmr
+from sources.lehd_lodes.probe import probe as probe_lehd_lodes
 from sources.ntad_amtrak.probe import probe as probe_ntad_amtrak
+from sources.opendataphilly_crime_incidents.probe import probe as probe_odp_crime
 from sources.opendataphilly_li_property_history.probe import probe as probe_odp_li
 from sources.opendataphilly_rental_suitability.probe import probe as probe_odp_rental
 from sources.phl_property_bulk.probe import probe as probe_phl_property_bulk
@@ -30,7 +35,12 @@ def run_all(output_dir: Path, tmp_dir: Path) -> list[FetchResult]:
         ("phl_property_bulk", probe_phl_property_bulk),
         ("opendataphilly_rental_suitability", probe_odp_rental),
         ("opendataphilly_li_property_history", probe_odp_li),
+        ("opendataphilly_crime_incidents", probe_odp_crime),
         ("zillow", probe_zillow),
+        ("acs_5y", probe_acs_5y),
+        ("lehd_lodes", probe_lehd_lodes),
+        ("hud_fmr", probe_hud_fmr),
+        ("bls_labor_cpi", probe_bls_labor_cpi),
         ("fred", probe_fred),
         ("ntad_amtrak", probe_ntad_amtrak),
     ]

@@ -9,7 +9,12 @@ This folder contains source-level ingestion contracts and ontology mapping into 
 - `Philadelphia Property Bulk Download`: Citywide property-level records; use it for parcel-level geographic and housing context.
 - `OpenDataPhilly - Certified for Rental Suitability`: Rental suitability license records; use it to track legal rental supply and unit-level compliance indicators.
 - `OpenDataPhilly - Licenses & Inspections Property History`: Property permit/inspection/violation history; use it for quality/risk and neighborhood condition signals.
+- `OpenDataPhilly - Crime Incidents`: Incident-level public safety records; use it for neighborhood risk and safety trend features.
 - `Zillow Research (ZORI + methodology)`: Rent index time series and documentation; use it as the main rent trend target and benchmark definition.
+- `Census ACS 5-year`: ZIP/tract demographic and housing attributes; use it for socioeconomic and housing stock controls.
+- `Census LEHD LODES`: Workplace/residence employment geography data; use it for job access and local economic activity features.
+- `HUD Fair Market Rents`: HUD reference rent levels by geography; use it as a policy/market benchmark feature.
+- `BLS Labor + CPI`: Local labor market and inflation reference metadata; use it to enrich macro context and area mappings.
 - `FRED PHIL942UR`: Philadelphia metro unemployment rate series; use it for macroeconomic regime features in forecasting.
 - `NTAD Amtrak Stations`: National Amtrak station geospatial data; use it to capture intercity rail access and hub proximity effects.
 

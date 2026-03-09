@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 import re
+import json
 from pathlib import Path
 
 from sources.common import FetchResult, first_successful_url, http_get_bytes, write_bytes
@@ -17,6 +18,12 @@ def probe(output_dir: Path, tmp_dir: Path) -> list[FetchResult]:
         "https://www3.septa.org/api/gtfsrt/TripUpdate.pb",
         "https://www3.septa.org/api/gtfsrt/septa-pa-us/VehiclePosition.pb",
         "https://www3.septa.org/api/gtfsrt/VehiclePosition.pb",
+    ]
+    legacy_json_candidates = [
+        "https://www3.septa.org/api/TransitView/index.php",
+        "https://www3.septa.org/api/TransitViewAll/index.php",
+        "https://www3.septa.org/api/TrainView/index.php",
+        "https://www3.septa.org/api/Arrivals/index.php?stopID=9001",
     ]
     env_candidates = [item.strip() for item in os.getenv("SEPTA_GTFS_RT_URLS", "").split(",") if item.strip()]
     if env_candidates:
@@ -36,7 +43,7 @@ def probe(output_dir: Path, tmp_dir: Path) -> list[FetchResult]:
                 },
             )
         ]
-    except Exception as exc:  # noqa: BLE001
+    except Exception as gtfs_rt_exc:  # noqa: BLE001
         # Attempt to discover current feed URLs from SEPTA developer page.
         try:
             dev_url = "https://www3.septa.org/developer/"
@@ -64,36 +71,52 @@ def probe(output_dir: Path, tmp_dir: Path) -> list[FetchResult]:
         except Exception:
             pass
 
-        metadata_candidates = [
-            "https://www3.septa.org/developer/",
-            "https://catalog.data.gov/dataset/septa-gtfs-real-time-alerts-and-updates",
-        ]
-        for meta_url in metadata_candidates:
+        # Fallback to SEPTA legacy realtime JSON endpoints if GTFS-RT protobuf feeds are unavailable.
+        legacy_errors: list[str] = []
+        for json_url in legacy_json_candidates:
             try:
-                meta_body = http_get_bytes(meta_url, max_bytes=150_000)
-                write_bytes(tmp_dir / "gtfs_rt_metadata_sample.html", meta_body)
+                body = http_get_bytes(json_url, max_bytes=200_000)
+                decoded = body.decode("utf-8", errors="replace")
+                payload = json.loads(decoded)
+                write_bytes(tmp_dir / "gtfs_rt_legacy_realtime_sample.json", body)
+                # Extract a small vehicle sample from whichever top-level list is populated.
+                vehicle_sample: list[object] = []
+                vehicle_count = 0
+                if isinstance(payload, dict):
+                    for key in ("bus", "train", "trolley", "rail", "vehicles"):
+                        vehicles = payload.get(key, [])
+                        if isinstance(vehicles, list) and vehicles:
+                            vehicle_sample = vehicles[:3]
+                            vehicle_count = len(vehicles)
+                            break
+                elif isinstance(payload, list):
+                    vehicle_sample = payload[:3]
+                    vehicle_count = len(payload)
                 return [
                     FetchResult(
                         name=name,
                         ok=True,
                         details={
-                            "probe_mode": "metadata_only",
-                            "metadata_url": meta_url,
-                            "bytes_sampled": len(meta_body),
+                            "probe_mode": "legacy_realtime_json",
+                            "url": json_url,
+                            "bytes_sampled": len(body),
+                            "payload_type": type(payload).__name__,
+                            "vehicle_count": vehicle_count,
+                            "sample_rows": vehicle_sample,
                             "feed_url_candidates_tried": url_candidates,
-                            "feed_error": str(exc),
-                            "tmp_sample": str(tmp_dir / "gtfs_rt_metadata_sample.html"),
+                            "feed_error": str(gtfs_rt_exc),
+                            "tmp_sample": str(tmp_dir / "gtfs_rt_legacy_realtime_sample.json"),
                         },
                     )
                 ]
-            except Exception:
-                continue
+            except Exception as legacy_exc:  # noqa: BLE001
+                legacy_errors.append(f"{json_url} -> {legacy_exc}")
 
         return [
             FetchResult(
                 name=name,
                 ok=False,
-                details={"url_candidates": url_candidates},
-                error=str(exc),
+                details={"url_candidates": url_candidates, "legacy_json_candidates": legacy_json_candidates},
+                error=f"GTFS-RT failed: {gtfs_rt_exc}; Legacy realtime fallback failed: {' | '.join(legacy_errors[:4])}",
             )
         ]
