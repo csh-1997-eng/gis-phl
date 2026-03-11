@@ -1,0 +1,44 @@
+[project]
+name = "gis-phl"
+version = "0.1.0"
+description = "Geospatial exploration and experiment workflows for Philadelphia."
+requires-python = ">=3.11,<3.12"
+dependencies = [
+  "numpy==2.2.5",
+  "pandas==2.2.3",
+  "PyYAML==6.0.2",
+  "requests==2.32.3",
+]
+
+[dependency-groups]
+notebooks = [
+  "ipykernel==6.29.5",
+  "jupyterlab==4.4.5",
+  "matplotlib==3.10.5",
+  "nbformat==5.10.4",
+  "notebook==7.4.5",
+  "seaborn==0.13.2",
+]
+geo = [
+  "fiona==1.10.1",
+  "geopandas==1.1.1",
+  "pyogrio==0.11.0",
+  "pyproj==3.7.1",
+  "shapely==2.1.1",
+]
+ml = [
+  "mlflow==2.20.3",
+  "scikit-learn==1.6.1",
+  "scipy==1.15.3",
+]
+proto = [
+  "contextily==1.6.2",
+  "folium==0.19.6",
+  "xgboost==3.0.1",
+]
+dev = [
+  "pytest==9.0.2",
+]
+
+[tool.uv]
+package = false

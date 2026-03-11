@@ -55,7 +55,7 @@ See `METHODOLOGY.md` for a full writeup of current assumptions, known inconsiste
 ## Run
 
 ```bash
-python experiments/exp_001_baseline_rent_growth/src/train.py \
+uv run python experiments/exp_001_baseline_rent_growth/src/train.py \
   --apt-path ingestion/tmp/entities/apartment_market.csv \
   --econ-path ingestion/tmp/entities/economic.csv \
   --artifacts-dir experiments/exp_001_baseline_rent_growth/artifacts \

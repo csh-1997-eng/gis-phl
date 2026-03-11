@@ -1,0 +1,15 @@
+question: Replace with the experiment question.
+hypothesis: Replace with the expected outcome to validate.
+reasoning:
+  summary: Summarize why this experiment should work.
+  expected_signal: Describe the measurable improvement or behavior you expect to see.
+  risks:
+    - Replace with the main reason this experiment could fail.
+evaluation:
+  primary_metric: Replace with the main metric key, for example holdout.linear_regression.mae.
+  success_criteria: Replace with the decision rule for success.
+  secondary_metrics:
+    - Replace with additional metric keys to monitor.
+  baselines:
+    - Replace with the baseline model or benchmark names.
+  validation_design: Replace with the validation protocol for this experiment.

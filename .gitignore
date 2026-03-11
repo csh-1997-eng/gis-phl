@@ -130,6 +130,7 @@ celerybeat.pid
 # Environments
 .env
 .venv
+.uv-cache/
 env/
 venv/
 ENV/
@@ -205,6 +206,9 @@ ingestion/tmp/
 
 # exploration notebook exports
 exploration/tmp/
+
+# MLflow local tracking store
+experiments/mlruns/
 
 # large local artifacts
 gis_proto/philly_parcels.html

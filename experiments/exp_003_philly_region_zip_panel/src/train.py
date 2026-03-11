@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""Train and evaluate Philly-consistent baseline models for exp_002."""
+"""Train and evaluate Philly-region ZIP panel models for exp_003."""
 
 from __future__ import annotations
 
 import argparse
 import json
 from pathlib import Path
+import sys
 from typing import Any
 
 import numpy as np
@@ -13,8 +14,17 @@ import pandas as pd
 
 from build_dataset import DEFAULT_REGION_STATES, build_modeling_table
 
+REPO_ROOT = Path(__file__).resolve().parents[3]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from experiments.tracking import load_run_spec, log_mlflow_run
+
 FEATURE_COLS = ["rent_growth_1m_lag1", "rent_growth_1m_lag3", "rent_growth_1m_lag12", "rent_index_lag1", "unemployment_rate"]
 TARGET_COL = "target_next_rent_growth_1m"
+EXPERIMENT_KEY = "exp_003"
+RUN_NAME = "exp_003_philly_region_zip_panel"
+DEFAULT_RUN_SPEC_PATH = Path(__file__).resolve().parents[1] / "run_spec.yaml"
 
 
 def mae(y_true: np.ndarray, y_pred: np.ndarray) -> float: return float(np.mean(np.abs(y_true - y_pred)))
@@ -106,9 +116,13 @@ def main() -> int:
     p.add_argument("--rolling-folds", type=int, default=3)
     p.add_argument("--rolling-val-months", type=int, default=6)
     p.add_argument("--min-train-months", type=int, default=36)
+    p.add_argument("--run-spec-path", type=Path, default=DEFAULT_RUN_SPEC_PATH)
+    p.add_argument("--mlflow-experiment", type=str, default=None)
+    p.add_argument("--no-mlflow", action="store_true")
     a = p.parse_args()
 
     a.artifacts_dir.mkdir(parents=True, exist_ok=True)
+    run_spec = load_run_spec(a.run_spec_path)
     df = build_modeling_table(a.apt_path, a.econ_path, tuple(a.region_states), a.min_history_months)
     holdout = evaluate_window(df, pd.to_datetime(a.train_end_date), None)
     rolling = rolling_backtest(df, a.rolling_folds, a.rolling_val_months, a.min_train_months)
@@ -133,7 +147,35 @@ def main() -> int:
         "rolling": {"n_folds_requested": a.rolling_folds, "n_folds_executed": len(rolling), "folds": [{"split": r["split"], "naive_lag1": r["naive_lag1"], "linear_regression": r["linear_regression"]} for r in rolling], "aggregate": rolling_agg},
     }
     (a.artifacts_dir / "metrics.json").write_text(json.dumps(metrics, indent=2), encoding="utf-8")
+
+    run_id = None
+    if not a.no_mlflow:
+        cli_args = {
+            "apt_path": str(a.apt_path),
+            "econ_path": str(a.econ_path),
+            "artifacts_dir": str(a.artifacts_dir),
+            "train_end_date": a.train_end_date,
+            "region_states": list(a.region_states),
+            "min_history_months": a.min_history_months,
+            "rolling_folds": a.rolling_folds,
+            "rolling_val_months": a.rolling_val_months,
+            "min_train_months": a.min_train_months,
+            "run_spec_path": str(a.run_spec_path),
+        }
+        run_id = log_mlflow_run(
+            experiment_key=EXPERIMENT_KEY,
+            run_name=RUN_NAME,
+            run_spec=run_spec,
+            run_spec_path=a.run_spec_path,
+            metrics_payload=metrics,
+            cli_args=cli_args,
+            artifacts_dir=a.artifacts_dir,
+            mlflow_experiment=a.mlflow_experiment,
+            additional_params={"feature_cols": FEATURE_COLS, "target_col": TARGET_COL},
+        )
     print(f"Wrote artifacts to: {a.artifacts_dir}")
+    if run_id is not None:
+        print(f"Logged MLflow run: {run_id}")
     return 0
 
 

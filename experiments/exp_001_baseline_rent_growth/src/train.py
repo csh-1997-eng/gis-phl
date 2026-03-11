@@ -6,11 +6,18 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
+import sys
 
 import numpy as np
 import pandas as pd
 
 from build_dataset import build_modeling_table
+
+REPO_ROOT = Path(__file__).resolve().parents[3]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from experiments.tracking import load_run_spec, log_mlflow_run
 
 
 FEATURE_COLS = [
@@ -21,6 +28,9 @@ FEATURE_COLS = [
     "unemployment_rate",
 ]
 TARGET_COL = "target_next_rent_growth_1m"
+EXPERIMENT_KEY = "exp_001"
+RUN_NAME = "exp_001_baseline_rent_growth"
+DEFAULT_RUN_SPEC_PATH = Path(__file__).resolve().parents[1] / "run_spec.yaml"
 
 
 def mae(y_true: np.ndarray, y_pred: np.ndarray) -> float:
@@ -78,7 +88,7 @@ def evaluate_split(df: pd.DataFrame, train_end_date: str) -> dict:
     coeffs = fit_linear_regression(X_train, y_train)
     y_pred_linear = predict_linear_regression(X_val, coeffs)
 
-    metrics = {
+    holdout_metrics = {
         "split": {
             "train_end_date": train_end_date,
             "train_rows": int(len(train_df)),
@@ -127,7 +137,10 @@ def evaluate_split(df: pd.DataFrame, train_end_date: str) -> dict:
     )
 
     return {
-        "metrics": metrics,
+        "metrics": {
+            "scope": {},
+            "holdout": holdout_metrics,
+        },
         "predictions": preds,
         "weights": weights,
         "summary": summary,
@@ -142,10 +155,14 @@ def main() -> int:
     parser.add_argument("--econ-path", type=Path, required=True)
     parser.add_argument("--artifacts-dir", type=Path, required=True)
     parser.add_argument("--train-end-date", type=str, default="2024-12-31")
+    parser.add_argument("--run-spec-path", type=Path, default=DEFAULT_RUN_SPEC_PATH)
+    parser.add_argument("--mlflow-experiment", type=str, default=None)
+    parser.add_argument("--no-mlflow", action="store_true")
     args = parser.parse_args()
 
     args.artifacts_dir.mkdir(parents=True, exist_ok=True)
 
+    run_spec = load_run_spec(args.run_spec_path)
     modeling_df = build_modeling_table(args.apt_path, args.econ_path)
     results = evaluate_split(modeling_df, args.train_end_date)
 
@@ -157,7 +174,30 @@ def main() -> int:
     with (args.artifacts_dir / "metrics.json").open("w", encoding="utf-8") as fp:
         json.dump(results["metrics"], fp, indent=2)
 
+    run_id = None
+    if not args.no_mlflow:
+        cli_args = {
+            "apt_path": str(args.apt_path),
+            "econ_path": str(args.econ_path),
+            "artifacts_dir": str(args.artifacts_dir),
+            "train_end_date": args.train_end_date,
+            "run_spec_path": str(args.run_spec_path),
+        }
+        run_id = log_mlflow_run(
+            experiment_key=EXPERIMENT_KEY,
+            run_name=RUN_NAME,
+            run_spec=run_spec,
+            run_spec_path=args.run_spec_path,
+            metrics_payload=results["metrics"],
+            cli_args=cli_args,
+            artifacts_dir=args.artifacts_dir,
+            mlflow_experiment=args.mlflow_experiment,
+            additional_params={"feature_cols": FEATURE_COLS, "target_col": TARGET_COL},
+        )
+
     print(f"Wrote artifacts to: {args.artifacts_dir}")
+    if run_id is not None:
+        print(f"Logged MLflow run: {run_id}")
     print(json.dumps(results["metrics"], indent=2))
     return 0
 

@@ -28,13 +28,13 @@ This folder contains source-level ingestion contracts and ontology mapping into 
 ## Run
 
 ```bash
-python ingestion/minimal_ingest.py
+uv run python ingestion/minimal_ingest.py
 ```
 
 Optional output and temp directories:
 
 ```bash
-python ingestion/minimal_ingest.py \
+uv run python ingestion/minimal_ingest.py \
   --output-dir ingestion/tmp/minimal_samples \
   --tmp-dir ingestion/tmp/source_samples
 ```
@@ -52,7 +52,7 @@ Promote stable datasets to `data/` only when ingestion logic is validated.
 After source probes generate samples, build canonical entity tables:
 
 ```bash
-python ingestion/ontology/build_entities.py \
+uv run python ingestion/ontology/build_entities.py \
   --source-dir ingestion/tmp/source_samples \
   --output-dir ingestion/tmp/entities
 ```
@@ -73,7 +73,7 @@ Outputs:
 Use this to verify how many geographies you have at each level and which Philadelphia geographies are available:
 
 ```bash
-python ingestion/ontology/audit_geographic_granularity.py \
+uv run python ingestion/ontology/audit_geographic_granularity.py \
   --apt-path ingestion/tmp/entities/apartment_market.csv \
   --output-dir ingestion/tmp/entities
 ```
@@ -87,7 +87,7 @@ Outputs:
 Use this to surface ZIP availability in surrounding states and rank nearby city/MSA/ZIP series by similarity to Philadelphia trends:
 
 ```bash
-python ingestion/ontology/find_expansion_candidates.py \
+uv run python ingestion/ontology/find_expansion_candidates.py \
   --apt-path ingestion/tmp/entities/apartment_market.csv \
   --output-dir ingestion/tmp/entities
 ```

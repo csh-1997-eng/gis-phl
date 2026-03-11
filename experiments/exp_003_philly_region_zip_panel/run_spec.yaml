@@ -1,0 +1,19 @@
+question: Can a wider ZIP-level panel across the Philadelphia region produce a more useful baseline for rent-growth forecasting?
+hypothesis: Expanding to ZIPs across PA, NJ, and DE with sufficient history should let the linear baseline outperform naive_lag1 on both holdout and rolling aggregate error metrics.
+reasoning:
+  summary: A larger regional ZIP panel should provide more variation for estimating coefficients while preserving local housing-market structure relevant to Philadelphia.
+  expected_signal: Linear regression should show consistent gains over naive_lag1 on holdout MAE and rolling aggregate RMSE across the regional ZIP panel.
+  risks:
+    - Cross-state heterogeneity may add noise and weaken model fit.
+    - Coverage filters such as minimum history months may materially change the panel and drive results.
+evaluation:
+  primary_metric: holdout.linear_regression.mae
+  success_criteria: Linear regression beats naive_lag1 on holdout MAE and rolling aggregate RMSE for the default region-state configuration.
+  secondary_metrics:
+    - holdout.linear_regression.rmse
+    - rolling.aggregate.linear_regression.mae_mean
+    - rolling.aggregate.linear_regression.rmse_mean
+    - holdout.linear_regression.directional_accuracy
+  baselines:
+    - naive_lag1
+  validation_design: Strict holdout split plus rolling backtest folds over a multi-state ZIP panel with minimum-history filtering.

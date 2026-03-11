@@ -1,0 +1,19 @@
+question: Does the same rent-growth baseline remain predictive when the geography scope is restricted to a Philadelphia-consistent panel?
+hypothesis: The linear baseline should still outperform naive_lag1 on holdout error metrics even with a much narrower geography slice.
+reasoning:
+  summary: Restricting to Philadelphia-consistent observations reduces sample size but should improve label consistency and make comparisons with local interventions clearer.
+  expected_signal: Linear regression should improve holdout MAE and RMSE and remain competitive on directional accuracy across rolling folds.
+  risks:
+    - Small sample size may make rank-based and directional metrics unstable.
+    - Rolling folds may show large variance because only one geography panel is represented.
+evaluation:
+  primary_metric: holdout.linear_regression.mae
+  success_criteria: Linear regression beats naive_lag1 on holdout MAE and rolling aggregate MAE.
+  secondary_metrics:
+    - holdout.linear_regression.rmse
+    - rolling.aggregate.linear_regression.mae_mean
+    - rolling.aggregate.linear_regression.rmse_mean
+    - holdout.linear_regression.directional_accuracy
+  baselines:
+    - naive_lag1
+  validation_design: Strict holdout split plus rolling backtest folds over the Philadelphia-consistent panel.

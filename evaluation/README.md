@@ -19,6 +19,9 @@ This folder compares results across experiments.
 ## Notebook
 
 - `notebooks/01_experiment_comparison.ipynb`: compares `exp_001`, `exp_002`, `exp_003` metrics and dataset summaries.
+- Launch notebooks from the unified project environment with `uv run jupyter lab`.
+- Set `SOURCE_MODE` inside the notebook to `files`, `mlflow`, or `auto`.
+- `auto` prefers the latest FINISHED MLflow run tagged for each experiment and falls back to local artifact files.
 
 ## Exports
 

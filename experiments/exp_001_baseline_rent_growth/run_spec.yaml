@@ -1,0 +1,18 @@
+question: Can lagged rent signals plus unemployment explain next-month rent growth at the geography-month level?
+hypothesis: A simple linear baseline using lagged rent features and unemployment should outperform a naive lag-1 predictor on holdout MAE and RMSE.
+reasoning:
+  summary: Lagged rent growth should capture short-term persistence while unemployment adds a macroeconomic signal for broader rental demand pressure.
+  expected_signal: Linear regression should reduce holdout MAE and RMSE versus naive_lag1 without materially degrading directional accuracy.
+  risks:
+    - Macroeconomic signal may be too coarse relative to geography-level rent variation.
+    - Performance gains may reflect a specific holdout slice rather than stable improvement.
+evaluation:
+  primary_metric: holdout.linear_regression.mae
+  success_criteria: Linear regression beats naive_lag1 on holdout MAE and RMSE for the default time split.
+  secondary_metrics:
+    - holdout.linear_regression.rmse
+    - holdout.linear_regression.directional_accuracy
+    - holdout.linear_regression.spearman_corr
+  baselines:
+    - naive_lag1
+  validation_design: Single strict time split with training through the configured train end date and validation on later periods.
