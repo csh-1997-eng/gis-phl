@@ -210,5 +210,8 @@ exploration/tmp/
 # MLflow local tracking store
 experiments/mlruns/
 
+# generated experiment tabular artifacts
+experiments/*/artifacts/*.csv
+
 # large local artifacts
 gis_proto/philly_parcels.html
