@@ -1,6 +1,15 @@
 # gis-phl
 A repository for exploring geospatial applications to help the city of Philadelphia
 
+## Project Structure
+
+- [exploration](exploration): open-ended discovery and rough notebooks
+- [investigations](investigations): structured follow-up work that is not yet a formal experiment
+- [experiments](experiments): reproducible runs with explicit hypotheses and evaluation plans
+- [evaluation](evaluation): cross-experiment comparison and synthesis
+- [Structuring Research Projects](docs/structuring_research_projects.md): project organization philosophy
+- [Scaling Research For Teams](docs/scaling_research_for_teams.md): branch, commit, and artifact handling guidance
+
 ## Environment And Jupyter
 
 - This repo uses one `uv`-managed project environment for scripts, notebooks, tests, and MLflow.
