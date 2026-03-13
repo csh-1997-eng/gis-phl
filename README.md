@@ -13,6 +13,33 @@ The secondary goal is to test whether observed rent dynamics support a stronger 
 
 The standard for this repo is research quality before model complexity. Strong fundamentals, clear hypotheses, defensible evaluation, and decision relevance matter more than chasing increasingly complex methods.
 
+## Workflow
+
+```
+                          ┌───────────────────────────────────┐
+                          │            Research               │
+                          │                                   │
+┌──────────────┐          │  ┌────────────────┐    informs    │
+│  Raw Data    │──────►   │  │ Investigations │ ──────────►   │
+│  Sources     │      │   │  └────────────────┘               │      ┌────────────┐
+└──────────────┘      │   │         ▲                         │      │            │
+                      ▼   │         │ updates                 │      │ Evaluation │
+              ┌──────────┐│         │ understanding           │      │            │
+              │ Ontology ││         ▼                         │      └────────────┘
+              │ Entities │├──►┌─────────────┐─────────────────┼─────────►  ▲
+              └──────────┘│   │ Experiments │                 │            │
+                          │   └─────────────┘                 │   context  │
+                          │                                   ├────────────┘
+                          └───────────────────────────────────┘
+```
+
+| Stage | Purpose |
+|---|---|
+| **Ingestion** | Acquire raw data and transform it into standardized entities via the ontology |
+| **Investigations** | Structured analysis of data behavior, coverage, and assumptions |
+| **Experiments** | Reproducible model runs with explicit hypotheses and evaluation plans |
+| **Evaluation** | Compare model performance against expected outcomes informed by project goals and investigation findings |
+
 ## Project Structure
 
 - [exploration](exploration): open-ended discovery and rough notebooks

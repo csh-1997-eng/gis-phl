@@ -6,7 +6,6 @@ Current sequence:
 
 - `inv_001_target_behavior`: understand the target before changing models
 - `inv_002_geography_scope`: compare geography levels, volatility, sparsity, and scope effects
-- `inv_003_data_readiness`: audit candidate datasets before building new ontology joins
 
 Working standard:
 
@@ -25,7 +24,6 @@ Promotion rule:
 
 1. Start with [inv_001_target_behavior/README.md](inv_001_target_behavior/README.md)
 2. Move to [inv_002_geography_scope/README.md](inv_002_geography_scope/README.md)
-3. Use [inv_003_data_readiness/README.md](inv_003_data_readiness/README.md) before expanding the ontology or feature table
 
 ## Commands
 
@@ -37,4 +35,10 @@ uv run python investigations/inv_001_target_behavior/src/analyze.py
 
 Current status:
 - `inv_001` is implemented
-- `inv_002` and `inv_003` are defined and scoped, but not yet scripted
+- `inv_002` is implemented
+
+Run the remaining investigations:
+
+```bash
+uv run python investigations/inv_002_geography_scope/src/analyze.py
+```

@@ -26,12 +26,36 @@ Compare geography levels and scope choices before declaring one modeling surface
 
 ## Run
 
-This investigation is not implemented yet.
-
-The intended entrypoint is:
-
 ```bash
 uv run python investigations/inv_002_geography_scope/src/analyze.py
 ```
 
-Do not treat this as runnable until the script exists.
+## Outputs
+
+Artifacts are written to `investigations/inv_002_geography_scope/artifacts/`.
+
+Key tables:
+
+- `surface_panel_summary.csv`
+- `experiment_error_summary.csv`
+- `experiment_error_by_geography_type.csv`
+- `error_concentration_by_geography.csv`
+- `surface_recommendation.csv`
+
+Key visuals:
+
+- `plots/surface_volatility_distribution.png`
+- `plots/surface_history_distribution.png`
+- `plots/experiment_holdout_mae.png`
+- `plots/surface_tradeoff_matrix.png`
+- `plots/error_concentration_by_geography.png`
+
+## Interpretation Standard
+
+This investigation is not trying to crown a universally best geography surface.
+
+It is trying to answer a narrower question:
+
+- which surface is most stable for controlled baseline work
+- which surface is most aligned with the real Philadelphia decision question
+- where the current modeling pain is coming from

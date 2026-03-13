@@ -6,6 +6,7 @@ This file contains project-specific configurations and commands.
 **For general coding rules and principles, see:** `rules/BASE_RULES.md`
 **For project-specific overrides and context, see:** `rules/PROJECT_SPECIFIC.md`
 **For specialized workflows, see:** `rules/skills/`
+**For local collaboration posture during active work, also load if present:** `tmp/codex_working_agreement.md`
 
 **NEVER UPDATE THE AI_RULES.MD, PROJECT_SPECIFIC.MD, OR ANY OF THE RULES FILES WITHOUT EXPRESS PERMISSION**
 

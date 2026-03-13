@@ -1,20 +1,25 @@
 from __future__ import annotations
 
-import os
 from pathlib import Path
+import sys
 
-REPO_ROOT = Path(__file__).resolve().parents[3]
-MATPLOTLIB_DIR = REPO_ROOT / ".tmp/matplotlib"
-MATPLOTLIB_DIR.mkdir(parents=True, exist_ok=True)
-os.environ.setdefault("MPLCONFIGDIR", str(MATPLOTLIB_DIR))
-os.environ.setdefault("XDG_CACHE_HOME", str(REPO_ROOT / ".tmp"))
-os.environ.setdefault("MPLBACKEND", "Agg")
-
-import matplotlib
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+
+REPO_ROOT = Path(__file__).resolve().parents[3]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from investigations.plotting import (
+    COLOR_BLUE,
+    COLOR_GOLD,
+    COLOR_NAVY,
+    COLOR_RED,
+    COLOR_TEAL,
+    PALETTE,
+    apply_plot_style,
+)
+import matplotlib.pyplot as plt
 
 
 DEFAULT_APT_PATH = REPO_ROOT / "ingestion/tmp/entities/apartment_market.csv"
@@ -24,37 +29,6 @@ TARGET_COLUMN = "rent_growth_1m"
 HORIZONS = (1, 3, 6, 12)
 EARLY_PERIOD_MAX_YEAR = 2019
 SHOCK_PERIOD_MAX_YEAR = 2022
-
-COLOR_NAVY = "#1f3b5c"
-COLOR_BLUE = "#4e79a7"
-COLOR_TEAL = "#2f6f6f"
-COLOR_GOLD = "#b8860b"
-COLOR_RED = "#9c3d2e"
-COLOR_GRID = "#d9dee5"
-
-
-def apply_plot_style() -> None:
-    plt.style.use("default")
-    plt.rcParams.update(
-        {
-            "figure.facecolor": "white",
-            "axes.facecolor": "white",
-            "axes.edgecolor": "#8a94a3",
-            "axes.linewidth": 0.8,
-            "axes.labelsize": 10,
-            "axes.titlesize": 12,
-            "axes.titleweight": "semibold",
-            "xtick.labelsize": 9,
-            "ytick.labelsize": 9,
-            "legend.fontsize": 9,
-            "font.size": 10,
-            "grid.color": COLOR_GRID,
-            "grid.linewidth": 0.8,
-            "grid.alpha": 0.75,
-            "savefig.facecolor": "white",
-            "savefig.bbox": "tight",
-        }
-    )
 
 
 def load_panel(apt_path: Path, geo_path: Path) -> pd.DataFrame:
@@ -376,14 +350,13 @@ def _save_target_volatility_plot(summary: pd.DataFrame, plots_dir: Path) -> None
 def _save_naive_mae_plot(autocorr: pd.DataFrame, plots_dir: Path) -> None:
     apply_plot_style()
     fig, ax = plt.subplots(figsize=(8, 5))
-    palette = [COLOR_NAVY, COLOR_BLUE, COLOR_TEAL, COLOR_GOLD]
     for idx, (geography_type, group) in enumerate(autocorr.groupby("geography_type", dropna=False)):
         ax.plot(
             group["horizon_months"],
             group["naive_mae_using_lag"],
             marker="o",
             linewidth=2,
-            color=palette[idx % len(palette)],
+            color=PALETTE[idx % len(PALETTE)],
             label=geography_type,
         )
     ax.set_title("Naive Lag Error By Horizon")
@@ -400,14 +373,13 @@ def _save_naive_mae_plot(autocorr: pd.DataFrame, plots_dir: Path) -> None:
 def _save_autocorrelation_plot(autocorr: pd.DataFrame, plots_dir: Path) -> None:
     apply_plot_style()
     fig, ax = plt.subplots(figsize=(8, 5))
-    palette = [COLOR_NAVY, COLOR_BLUE, COLOR_TEAL, COLOR_GOLD]
     for idx, (geography_type, group) in enumerate(autocorr.groupby("geography_type", dropna=False)):
         ax.plot(
             group["horizon_months"],
             group["mean_series_autocorr"],
             marker="o",
             linewidth=2,
-            color=palette[idx % len(palette)],
+            color=PALETTE[idx % len(PALETTE)],
             label=geography_type,
         )
     ax.axhline(0.0, color="black", linewidth=1, alpha=0.4)
@@ -425,14 +397,13 @@ def _save_autocorrelation_plot(autocorr: pd.DataFrame, plots_dir: Path) -> None:
 def _save_yearly_mean_target_plot(yearly: pd.DataFrame, plots_dir: Path) -> None:
     apply_plot_style()
     fig, ax = plt.subplots(figsize=(10, 5))
-    palette = [COLOR_NAVY, COLOR_BLUE, COLOR_TEAL, COLOR_GOLD]
     for idx, (geography_type, group) in enumerate(yearly.groupby("geography_type", dropna=False)):
         ax.plot(
             group["period_year"],
             group["mean_target"],
             marker="o",
             linewidth=2,
-            color=palette[idx % len(palette)],
+            color=PALETTE[idx % len(PALETTE)],
             label=geography_type,
         )
     ax.axhline(0.0, color="black", linewidth=1, alpha=0.4)

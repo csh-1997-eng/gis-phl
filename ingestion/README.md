@@ -23,6 +23,7 @@ This folder contains source-level ingestion contracts and ontology mapping into 
 
 - `sources/`: one subfolder per source with request/response inspection code
 - `ontology/`: canonical entity definitions and mapping code
+- `source_audit/`: descriptive audit of connector state, live probe status, and local sample coverage
 - `minimal_ingest.py`: lightweight cross-source probe for connector health
 
 ## Run
@@ -46,6 +47,20 @@ uv run python ingestion/minimal_ingest.py \
 
 The report records per-source status, metadata, and small sample rows/bytes.
 Promote stable datasets to `data/` only when ingestion logic is validated.
+
+## Audit Source Connectors
+
+Use this to inspect connector coverage after running `minimal_ingest.py`:
+
+```bash
+uv run python ingestion/source_audit/analyze.py
+```
+
+Outputs:
+- `ingestion/source_audit/artifacts/source_inventory.csv`
+- `ingestion/source_audit/artifacts/source_probe_results.csv`
+- `ingestion/source_audit/artifacts/source_sample_inventory.csv`
+- `ingestion/source_audit/artifacts/source_audit_summary.csv`
 
 ## Build Ontology Entities
 
