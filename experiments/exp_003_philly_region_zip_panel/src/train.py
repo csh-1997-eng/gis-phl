@@ -18,13 +18,19 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from experiments.tracking import load_run_spec, log_mlflow_run
+from experiments.tracking import load_run_spec, log_mlflow_run, resolve_run_name
 
 FEATURE_COLS = ["rent_growth_1m_lag1", "rent_growth_1m_lag3", "rent_growth_1m_lag12", "rent_index_lag1", "unemployment_rate"]
 TARGET_COL = "target_next_rent_growth_1m"
 EXPERIMENT_KEY = "exp_003"
 RUN_NAME = "exp_003_philly_region_zip_panel"
 DEFAULT_RUN_SPEC_PATH = Path(__file__).resolve().parents[1] / "run_spec.yaml"
+DEFAULT_VARIANT = "v1_baseline_linear"
+DEFAULT_STAGE = "baseline"
+DEFAULT_TARGET_NAME = "r1m_next"
+DEFAULT_GEO_SCOPE = "philly_zip_region"
+DEFAULT_FEATURE_SET = "lags_plus_econ"
+DEFAULT_ONTOLOGY_VERSION = "2026-03-11-city-key-fix"
 
 
 def mae(y_true: np.ndarray, y_pred: np.ndarray) -> float: return float(np.mean(np.abs(y_true - y_pred)))
@@ -111,6 +117,13 @@ def main() -> int:
     p.add_argument("--econ-path", type=Path, required=True)
     p.add_argument("--artifacts-dir", type=Path, required=True)
     p.add_argument("--train-end-date", type=str, default="2024-12-31")
+    p.add_argument("--variant", type=str, default=DEFAULT_VARIANT)
+    p.add_argument("--run-name", type=str, default=None)
+    p.add_argument("--stage", type=str, default=DEFAULT_STAGE)
+    p.add_argument("--target-name", type=str, default=DEFAULT_TARGET_NAME)
+    p.add_argument("--geo-scope", type=str, default=DEFAULT_GEO_SCOPE)
+    p.add_argument("--feature-set", type=str, default=DEFAULT_FEATURE_SET)
+    p.add_argument("--ontology-version", type=str, default=DEFAULT_ONTOLOGY_VERSION)
     p.add_argument("--region-states", nargs="+", default=list(DEFAULT_REGION_STATES))
     p.add_argument("--min-history-months", type=int, default=24)
     p.add_argument("--rolling-folds", type=int, default=3)
@@ -150,11 +163,23 @@ def main() -> int:
 
     run_id = None
     if not a.no_mlflow:
+        run_name = resolve_run_name(
+            default_run_name=RUN_NAME,
+            variant=a.variant,
+            run_name=a.run_name,
+        )
         cli_args = {
             "apt_path": str(a.apt_path),
             "econ_path": str(a.econ_path),
             "artifacts_dir": str(a.artifacts_dir),
             "train_end_date": a.train_end_date,
+            "variant": a.variant,
+            "run_name": a.run_name,
+            "stage": a.stage,
+            "target_name": a.target_name,
+            "geo_scope": a.geo_scope,
+            "feature_set": a.feature_set,
+            "ontology_version": a.ontology_version,
             "region_states": list(a.region_states),
             "min_history_months": a.min_history_months,
             "rolling_folds": a.rolling_folds,
@@ -164,7 +189,7 @@ def main() -> int:
         }
         run_id = log_mlflow_run(
             experiment_key=EXPERIMENT_KEY,
-            run_name=RUN_NAME,
+            run_name=run_name,
             run_spec=run_spec,
             run_spec_path=a.run_spec_path,
             metrics_payload=metrics,
@@ -172,6 +197,14 @@ def main() -> int:
             artifacts_dir=a.artifacts_dir,
             mlflow_experiment=a.mlflow_experiment,
             additional_params={"feature_cols": FEATURE_COLS, "target_col": TARGET_COL},
+            run_tags={
+                "variant": a.variant,
+                "stage": a.stage,
+                "target": a.target_name,
+                "geo_scope": a.geo_scope,
+                "feature_set": a.feature_set,
+                "ontology_version": a.ontology_version,
+            },
         )
     print(f"Wrote artifacts to: {a.artifacts_dir}")
     if run_id is not None:

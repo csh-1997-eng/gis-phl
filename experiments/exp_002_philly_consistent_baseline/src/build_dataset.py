@@ -6,8 +6,8 @@ from pathlib import Path
 
 import pandas as pd
 
-PHILLY_GEO_ID = "geo:zori:philadelphia__pa"
-PHILLY_MSA_GEO_ID = "geo:zori:msa:philadelphia__pa"
+PHILLY_GEO_ID = "geo:zori:city:13271"
+PHILLY_MSA_GEO_ID = "geo:zori:msa:394974"
 
 
 def build_modeling_table(apt_path: Path, econ_path: Path, philly_geo_id: str = PHILLY_GEO_ID) -> pd.DataFrame:

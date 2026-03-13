@@ -3,24 +3,24 @@
   "holdout": {
     "split": {
       "train_end_date": "2024-12-31",
-      "train_rows": 106498,
-      "validation_rows": 12547,
-      "train_min_period": "2015-08-31",
+      "train_rows": 106563,
+      "validation_rows": 12557,
+      "train_min_period": "2016-02-29",
       "train_max_period": "2024-12-31",
       "validation_min_period": "2025-01-31",
       "validation_max_period": "2025-11-30"
     },
     "naive_lag1": {
-      "mae": 0.008866906404919115,
-      "rmse": 0.012713075917109878,
-      "directional_accuracy": 0.5911373236630271,
-      "spearman_corr": 0.13177166892431147
+      "mae": 0.008896414761169015,
+      "rmse": 0.01273036267168814,
+      "directional_accuracy": 0.5877199968145258,
+      "spearman_corr": 0.1264965258322429
     },
     "linear_regression": {
-      "mae": 0.006824103824702858,
-      "rmse": 0.00961498648420739,
-      "directional_accuracy": 0.6183948354188252,
-      "spearman_corr": 0.18080985093729826
+      "mae": 0.0068208605883134125,
+      "rmse": 0.009610104736336379,
+      "directional_accuracy": 0.6182209126383691,
+      "spearman_corr": 0.18108008371385834
     }
   }
 }

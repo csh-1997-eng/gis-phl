@@ -1,11 +1,11 @@
 {
   "scope": {
-    "philly_geo_id": "geo:zori:philadelphia__pa"
+    "philly_geo_id": "geo:zori:city:13271"
   },
   "holdout": {
     "split": {
-      "train_rows": 107,
-      "validation_rows": 10,
+      "train_rows": 214,
+      "validation_rows": 20,
       "train_min_period": "2016-02-29",
       "train_max_period": "2024-12-31",
       "validation_min_period": "2025-01-31",
@@ -13,16 +13,16 @@
       "train_end_date": "2024-12-31"
     },
     "naive_lag1": {
-      "mae": 0.00196525298501165,
-      "rmse": 0.0023291054335869876,
+      "mae": 0.0016471752058566647,
+      "rmse": 0.0019763328205028986,
       "directional_accuracy": 0.8,
-      "spearman_corr": 0.006060606060606061
+      "spearman_corr": 0.19999999999999998
     },
     "linear_regression": {
-      "mae": 0.0016628214321162305,
-      "rmse": 0.0020702930980321717,
+      "mae": 0.0012886836912808775,
+      "rmse": 0.0016052728120243725,
       "directional_accuracy": 0.9,
-      "spearman_corr": 0.13939393939393938
+      "spearman_corr": 0.437593984962406
     }
   },
   "rolling": {
@@ -31,8 +31,8 @@
     "folds": [
       {
         "split": {
-          "train_rows": 111,
-          "validation_rows": 5,
+          "train_rows": 222,
+          "validation_rows": 10,
           "train_min_period": "2016-02-29",
           "train_max_period": "2025-04-30",
           "validation_min_period": "2025-05-31",
@@ -42,22 +42,22 @@
           "validation_end_date": "2025-10-30"
         },
         "naive_lag1": {
-          "mae": 0.0029121977520078397,
-          "rmse": 0.0031254478409570214,
+          "mae": 0.00229623899096783,
+          "rmse": 0.0025868089420575486,
           "directional_accuracy": 0.8,
-          "spearman_corr": -0.19999999999999998
+          "spearman_corr": 0.06666666666666665
         },
         "linear_regression": {
-          "mae": 0.002381989026631122,
-          "rmse": 0.002556151130877593,
+          "mae": 0.0017702809995752537,
+          "rmse": 0.0019740010564571844,
           "directional_accuracy": 0.8,
-          "spearman_corr": 0.09999999999999999
+          "spearman_corr": 0.5515151515151515
         }
       },
       {
         "split": {
-          "train_rows": 105,
-          "validation_rows": 6,
+          "train_rows": 210,
+          "validation_rows": 12,
           "train_min_period": "2016-02-29",
           "train_max_period": "2024-10-31",
           "validation_min_period": "2024-11-30",
@@ -67,22 +67,22 @@
           "validation_end_date": "2025-04-30"
         },
         "naive_lag1": {
-          "mae": 0.0011207022552952334,
-          "rmse": 0.0011645844651862326,
+          "mae": 0.0011743342227258,
+          "rmse": 0.0012862409634237966,
           "directional_accuracy": 1.0,
-          "spearman_corr": -0.08571428571428573
+          "spearman_corr": 0.2797202797202798
         },
         "linear_regression": {
-          "mae": 0.0007962789145190523,
-          "rmse": 0.001183496127840838,
+          "mae": 0.0007824171095242204,
+          "rmse": 0.0009954132640054313,
           "directional_accuracy": 1.0,
-          "spearman_corr": -0.2
+          "spearman_corr": 0.23076923076923078
         }
       },
       {
         "split": {
-          "train_rows": 99,
-          "validation_rows": 5,
+          "train_rows": 198,
+          "validation_rows": 10,
           "train_min_period": "2016-02-29",
           "train_max_period": "2024-04-30",
           "validation_min_period": "2024-05-31",
@@ -92,39 +92,39 @@
           "validation_end_date": "2024-10-30"
         },
         "naive_lag1": {
-          "mae": 0.00176645850496954,
-          "rmse": 0.001955920868589511,
+          "mae": 0.0018653501370254298,
+          "rmse": 0.0021871288733665084,
           "directional_accuracy": 1.0,
-          "spearman_corr": 0.9999999999999999
+          "spearman_corr": 0.8545454545454544
         },
         "linear_regression": {
-          "mae": 0.0012049364381359839,
-          "rmse": 0.0014123901592903393,
+          "mae": 0.001216248722595624,
+          "rmse": 0.0013491135638212845,
           "directional_accuracy": 1.0,
-          "spearman_corr": 0.9999999999999999
+          "spearman_corr": 0.9636363636363635
         }
       }
     ],
     "aggregate": {
       "naive_lag1": {
-        "mae_mean": 0.001933119504090871,
-        "mae_std": 0.0007408085425877491,
-        "rmse_mean": 0.0020819843915775883,
-        "rmse_std": 0.000805466863990869,
+        "mae_mean": 0.0017786411169063534,
+        "mae_std": 0.0004621013004948579,
+        "rmse_mean": 0.0020200595929492846,
+        "rmse_std": 0.0005439383390950471,
         "directional_accuracy_mean": 0.9333333333333332,
         "directional_accuracy_std": 0.09428090415820632,
-        "spearman_corr_mean": 0.23809523809523805,
-        "spearman_corr_std": 0.5407645549172719
+        "spearman_corr_mean": 0.4003108003108003,
+        "spearman_corr_std": 0.33276097661790865
       },
       "linear_regression": {
-        "mae_mean": 0.0014610681264287193,
-        "mae_std": 0.0006722210555188838,
-        "rmse_mean": 0.0017173458060029234,
-        "rmse_std": 0.0006004408931148712,
+        "mae_mean": 0.0012563156105650328,
+        "mae_std": 0.00040428767229152955,
+        "rmse_mean": 0.0014395092947613,
+        "rmse_std": 0.00040458790393274125,
         "directional_accuracy_mean": 0.9333333333333332,
         "directional_accuracy_std": 0.09428090415820632,
-        "spearman_corr_mean": 0.3,
-        "spearman_corr_std": 0.5099019513592785
+        "spearman_corr_mean": 0.581973581973582,
+        "spearman_corr_std": 0.29996593762038626
       }
     }
   }

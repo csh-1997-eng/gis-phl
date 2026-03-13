@@ -8,8 +8,8 @@ import pandas as pd
 
 
 def build_modeling_table(apt_path: Path, econ_path: Path) -> pd.DataFrame:
-    apt = pd.read_csv(apt_path)
-    econ = pd.read_csv(econ_path)
+    apt = pd.read_csv(apt_path, low_memory=False)
+    econ = pd.read_csv(econ_path, low_memory=False)
 
     apt["period_dt"] = pd.to_datetime(apt["period"], errors="coerce")
     econ["period_dt"] = pd.to_datetime(econ["period"], errors="coerce")

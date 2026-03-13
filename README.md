@@ -1,6 +1,18 @@
 # gis-phl
 A repository for exploring geospatial applications to help the city of Philadelphia
 
+## Project Goal
+
+This project studies Philadelphia rental price change, how it relates to transportation with a specific focus on trains, and how those relationships compare with broader national patterns.
+
+This project separates predictive questions about where rents may change next from explanatory questions about which factors, including train access and infrastructure, appear to be associated with those changes.
+
+The primary goal is to identify which areas of Philadelphia are likely to become more expensive or less expensive over time.
+
+The secondary goal is to test whether observed rent dynamics support a stronger case for train infrastructure investment.
+
+The standard for this repo is research quality before model complexity. Strong fundamentals, clear hypotheses, defensible evaluation, and decision relevance matter more than chasing increasingly complex methods.
+
 ## Project Structure
 
 - [exploration](exploration): open-ended discovery and rough notebooks
@@ -54,26 +66,46 @@ uv run python ingestion/ontology/build_entities.py \
 ./ingestion/scripts/cleanup_tmp_keep_entities.sh
 ```
 
-## Experiment Baseline (exp_001)
+## Reproduce Current Work
 
+1. Build source samples and ontology entities.
+
+Use the ingestion commands above.
+
+2. Review source and entity quality.
+
+Start Jupyter:
 ```bash
-uv run python experiments/exp_001_baseline_rent_growth/src/train.py \
-  --apt-path ingestion/tmp/entities/apartment_market.csv \
-  --econ-path ingestion/tmp/entities/economic.csv \
-  --artifacts-dir experiments/exp_001_baseline_rent_growth/artifacts \
-  --train-end-date 2024-12-31
+uv run jupyter lab
 ```
+
+Then work through:
+- [exploration/README.md](exploration/README.md)
+
+3. Run the current investigation baseline.
+
+Start with:
+- [investigations/README.md](investigations/README.md)
+- [investigations/inv_001_target_behavior/README.md](investigations/inv_001_target_behavior/README.md)
+
+4. Run the current experiment set.
+
+Use:
+- [experiments/README.md](experiments/README.md)
+- [experiments/exp_001_baseline_rent_growth/README.md](experiments/exp_001_baseline_rent_growth/README.md)
+- [experiments/exp_002_philly_consistent_baseline/README.md](experiments/exp_002_philly_consistent_baseline/README.md)
+- [experiments/exp_003_philly_region_zip_panel/README.md](experiments/exp_003_philly_region_zip_panel/README.md)
+
+## Evaluation (Cross-Experiment)
+
+Use:
+- [evaluation/README.md](evaluation/README.md)
 
 MLflow notes:
 - Local tracking defaults to `experiments/mlruns/`
 - Override backend with `MLFLOW_TRACKING_URI`
 - Disable tracking for a single run with `--no-mlflow`
-- View local runs with `uv run mlflow ui --backend-store-uri experiments/mlruns`
-
-## Evaluation (Cross-Experiment)
-
-Open:
-- `evaluation/notebooks/01_experiment_comparison.ipynb`
-
-This notebook compares `exp_001` / `exp_002` / `exp_003`, supports file or MLflow-backed loading, and writes CSV outputs to:
-- `evaluation/tmp/notebook_exports/01_experiment_comparison/`
+- View local runs with:
+```bash
+uv run mlflow ui --backend-store-uri experiments/mlruns
+```

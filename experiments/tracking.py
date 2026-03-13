@@ -26,6 +26,19 @@ REQUIRED_RUN_SPEC_FIELDS = (
 )
 
 
+def resolve_run_name(
+    *,
+    default_run_name: str,
+    variant: str | None = None,
+    run_name: str | None = None,
+) -> str:
+    if run_name:
+        return run_name.strip()
+    if variant:
+        return variant.strip()
+    return default_run_name
+
+
 def resolve_tracking_uri() -> str:
     """Return the configured MLflow tracking URI."""
     return os.environ.get("MLFLOW_TRACKING_URI", str(DEFAULT_TRACKING_DIR.resolve()))
@@ -161,12 +174,15 @@ def build_tag_values(
     run_spec: dict[str, Any],
     run_spec_path: Path,
     artifacts_dir: Path,
+    run_tags: dict[str, Any] | None = None,
 ) -> dict[str, str]:
     tags = {
         "repo.experiment_key": experiment_key,
         "repo.run_spec_path": str(run_spec_path),
         "repo.artifacts_dir": str(artifacts_dir),
     }
+    if run_tags:
+        tags.update({key: _stringify(value) for key, value in run_tags.items()})
     tags.update(flatten_for_logging(run_spec, prefix="spec"))
     return tags
 
@@ -192,6 +208,7 @@ def log_mlflow_run(
     artifacts_dir: Path,
     mlflow_experiment: str | None = None,
     additional_params: dict[str, Any] | None = None,
+    run_tags: dict[str, Any] | None = None,
 ) -> str:
     """Log one completed training invocation to MLflow."""
     mlflow = _require_mlflow()
@@ -210,6 +227,7 @@ def log_mlflow_run(
         run_spec=run_spec,
         run_spec_path=run_spec_path,
         artifacts_dir=artifacts_dir,
+        run_tags=run_tags,
     )
     metric_values = extract_metric_values(normalized_metrics)
 

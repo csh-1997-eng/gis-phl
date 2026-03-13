@@ -5,7 +5,6 @@ Everything related to EDA and source/entity understanding lives here.
 ## Layout
 
 - `notebooks/`: exploratory notebooks
-- `env/`: pinned notebook environment and kernel controls
 
 ## Notebooks
 
@@ -13,25 +12,25 @@ Everything related to EDA and source/entity understanding lives here.
 - `02_entity_sanity_checks.ipynb`: validate ontology entity outputs (nulls, keys, periods, integrity).
 - Both notebooks export summary CSVs to `exploration/tmp/notebook_exports/<notebook_name>/`.
 
-## Start Exploration
+## Run
 
 ```bash
-./env/scripts/bootstrap_notebook_env.sh
-cd env
-make lab
+uv run jupyter lab
 ```
 
-## Re-run Entity Exploration (Scripted)
+Then open:
+- `exploration/notebooks/01_data_source_investigation.ipynb`
+- `exploration/notebooks/02_entity_sanity_checks.ipynb`
 
-Use this when entity schemas evolve and you want deterministic CSV outputs without manually re-running notebook cells:
+Use this section after:
+- `uv run python ingestion/minimal_ingest.py`
+- `uv run python ingestion/ontology/build_entities.py --source-dir ingestion/tmp/source_samples --output-dir ingestion/tmp/entities`
 
-```bash
-python exploration/scripts/run_entity_exploration.py \
-  --entities-dir ingestion/tmp/entities \
-  --output-dir exploration/tmp/notebook_exports/02_entity_sanity_checks
-```
+## Reproduce The Current Exploration Outputs
 
-Exports include:
+The notebooks are the main workflow. Re-run them from Jupyter if the entity tables or source samples change.
+
+Expected exports include:
 - `table_summary.csv`
 - `apartment_market_granularity.csv`
 - `zip_panel_geographies.csv`

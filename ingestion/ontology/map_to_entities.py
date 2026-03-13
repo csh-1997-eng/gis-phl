@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import csv
+import re
 from pathlib import Path
 from typing import Any, Dict, Iterable, List
 
@@ -21,6 +22,19 @@ def _to_float(value: Any) -> float | None:
 
 def _slugify(value: str) -> str:
     return "".join(ch.lower() if ch.isalnum() else "_" for ch in value).strip("_")
+
+
+def _is_month_period_column(value: str) -> bool:
+    return bool(re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(value).strip()))
+
+
+def _zori_geography_entity_id(region_id: str, region_type: str, region_name: str) -> str:
+    region_type_slug = _slugify(region_type) if region_type else "unknown"
+    stable_region_id = str(region_id).strip()
+    if stable_region_id:
+        return f"geo:zori:{region_type_slug}:{stable_region_id}"
+    fallback_slug = _slugify(region_name) if region_name else "unknown"
+    return f"geo:zori:{region_type_slug}:{fallback_slug}"
 
 
 def map_fred_row_to_economic(row: Dict[str, Any]) -> Dict[str, Any]:
@@ -47,7 +61,6 @@ def map_zori_observation_to_apartment_market(
     prev_12m: float | None,
 ) -> Dict[str, Any]:
     """Map one Zillow ZORI region-period observation to apartment_market."""
-    geo_slug = _slugify(region_name) if region_name else str(region_id)
     region_type_slug = _slugify(region_type) if region_type else "unknown"
     rent_growth_1m = None
     rent_growth_12m = None
@@ -58,7 +71,7 @@ def map_zori_observation_to_apartment_market(
 
     return {
         "entity_id": f"apt_market:{region_type_slug}:{region_id}:{period}",
-        "geography_entity_id": f"geo:zori:{region_type_slug}:{geo_slug}",
+        "geography_entity_id": _zori_geography_entity_id(region_id, region_type, region_name),
         "period": period,
         "rent_index": rent_index,
         "rent_growth_1m": rent_growth_1m,
@@ -94,8 +107,7 @@ def load_zori_apartment_market_entities_from_csv(
         if reader.fieldnames is None:
             return entities
 
-        meta_cols = {"RegionID", "SizeRank", "RegionName", "RegionType", "StateName"}
-        period_cols = [col for col in reader.fieldnames if col not in meta_cols]
+        period_cols = [col for col in reader.fieldnames if _is_month_period_column(col)]
 
         for row in reader:
             region_id = str(row.get("RegionID", "")).strip()

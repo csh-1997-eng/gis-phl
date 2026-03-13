@@ -23,6 +23,26 @@ This folder compares results across experiments.
 - Set `SOURCE_MODE` inside the notebook to `files`, `mlflow`, or `auto`.
 - `auto` prefers the latest FINISHED MLflow run tagged for each experiment and falls back to local artifact files.
 
+## Run
+
+Interactive:
+
+```bash
+uv run jupyter lab
+```
+
+Then open:
+- `evaluation/notebooks/01_experiment_comparison.ipynb`
+
+Scripted:
+
+```bash
+uv run jupyter nbconvert \
+  --to notebook \
+  --execute evaluation/notebooks/01_experiment_comparison.ipynb \
+  --inplace
+```
+
 ## Exports
 
 The notebook writes CSV summaries to:

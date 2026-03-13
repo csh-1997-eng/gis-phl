@@ -7,11 +7,12 @@ import textwrap
 import pytest
 
 from experiments.tracking import build_param_values, extract_metric_values, load_run_spec, log_mlflow_run
+from experiments.tracking import resolve_run_name
 
 
 def _sample_metrics_payload() -> dict:
     return {
-        "scope": {"philly_geo_id": "geo:zori:philadelphia__pa"},
+        "scope": {"philly_geo_id": "geo:zori:city:13271"},
         "holdout": {
             "split": {
                 "train_end_date": "2024-12-31",
@@ -92,9 +93,19 @@ def test_extract_metric_values_and_param_values() -> None:
     assert metrics["holdout.linear_regression.mae"] == pytest.approx(0.1)
     assert metrics["rolling.aggregate.linear_regression.mae_mean"] == pytest.approx(0.12)
     assert metrics["rolling.folds.fold_1.naive_lag1.mae"] == pytest.approx(0.25)
-    assert params["scope.philly_geo_id"] == "geo:zori:philadelphia__pa"
+    assert params["scope.philly_geo_id"] == "geo:zori:city:13271"
     assert params["holdout.split.train_end_date"] == "2024-12-31"
     assert params["run.feature_cols"] == "[\"lag1\", \"lag3\"]"
+
+
+def test_resolve_run_name_prefers_explicit_name_then_variant() -> None:
+    assert resolve_run_name(default_run_name="legacy_name", variant="v2_clean_city_keys") == "v2_clean_city_keys"
+    assert resolve_run_name(
+        default_run_name="legacy_name",
+        variant="v2_clean_city_keys",
+        run_name="manual_override",
+    ) == "manual_override"
+    assert resolve_run_name(default_run_name="legacy_name") == "legacy_name"
 
 
 def test_log_mlflow_run_records_tags_metrics_and_artifacts(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -129,6 +140,14 @@ def test_log_mlflow_run_records_tags_metrics_and_artifacts(tmp_path: Path, monke
         artifacts_dir=artifacts_dir,
         mlflow_experiment="unit-tests",
         additional_params={"feature_cols": ["lag1"]},
+        run_tags={
+            "variant": "v2_clean_city_keys",
+            "stage": "baseline",
+            "target": "r1m_next",
+            "geo_scope": "philly_city",
+            "feature_set": "lags_plus_econ",
+            "ontology_version": "2026-03-11-city-key-fix",
+        },
     )
 
     mlflow.set_tracking_uri(str(tracking_dir))
@@ -138,6 +157,12 @@ def test_log_mlflow_run_records_tags_metrics_and_artifacts(tmp_path: Path, monke
     assert run.data.metrics["holdout.linear_regression.mae"] == pytest.approx(0.1)
     assert run.data.tags["repo.experiment_key"] == "exp_test"
     assert run.data.tags["spec.evaluation.primary_metric"] == "holdout.linear_regression.mae"
+    assert run.data.tags["variant"] == "v2_clean_city_keys"
+    assert run.data.tags["stage"] == "baseline"
+    assert run.data.tags["target"] == "r1m_next"
+    assert run.data.tags["geo_scope"] == "philly_city"
+    assert run.data.tags["feature_set"] == "lags_plus_econ"
+    assert run.data.tags["ontology_version"] == "2026-03-11-city-key-fix"
 
     download_dir = tmp_path / "downloads"
     download_dir.mkdir()

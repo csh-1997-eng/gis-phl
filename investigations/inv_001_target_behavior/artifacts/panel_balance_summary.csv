@@ -1,0 +1,5 @@
+geography_type,geo_count,median_row_count,median_unique_period_count,min_row_count,max_row_count,median_coverage_ratio,mean_missing_internal_months,total_duplicate_period_rows,median_target_std
+zori_zip,752,112.0,112.0,1,132,1.0,0.39893617021276595,0,0.010573584170076214
+zori_city,368,132.0,132.0,4,132,1.0,0.26358695652173914,0,0.00757132837085709
+zori_msa,182,132.0,132.0,49,132,1.0,0.12087912087912088,0,0.006169758246660567
+zori_country,1,132.0,132.0,132,132,1.0,0.0,0,0.004528354332836659
