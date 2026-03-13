@@ -182,6 +182,7 @@ rules/skills/
 /CLAUDE.md
 /AGENTS.md
 tmp/
+.tmp/
 
 
 # large/local datasets
