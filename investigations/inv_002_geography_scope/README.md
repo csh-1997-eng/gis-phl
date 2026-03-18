@@ -13,8 +13,8 @@ Compare geography levels and scope choices before declaring one modeling surface
 
 ## Expected Inputs
 
-- `ingestion/tmp/entities/apartment_market.csv`
-- `ingestion/tmp/entities/geographic.csv`
+- `exploration/tmp/ontology/apartment_market.csv`
+- `exploration/tmp/ontology/geographic.csv`
 - experiment artifact summaries and predictions where useful
 
 ## Expected Outputs

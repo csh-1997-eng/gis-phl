@@ -1,0 +1,180 @@
+layers:
+  - layer: philly_core
+    exact_matches:
+      - region_type: city
+        region_name: Philadelphia
+        state_name: PA
+        rationale: Primary city target for broad Philadelphia market understanding.
+      - region_type: msa
+        region_name: Philadelphia, PA
+        rationale: Primary metro context for the Philadelphia housing market.
+
+  - layer: commuter_substitution
+    exact_matches:
+      - region_type: city
+        region_name: Wilmington
+        state_name: DE
+        rationale: Nearby substitution city within the greater commuter market.
+      - region_type: city
+        region_name: Newark
+        state_name: DE
+        rationale: Delaware city surface connected to the Philadelphia commuter shed.
+      - region_type: city
+        region_name: Camden
+        state_name: NJ
+        rationale: Direct adjacent market with strong housing substitution potential.
+      - region_type: city
+        region_name: Cherry Hill
+        state_name: NJ
+        rationale: South Jersey suburban comparator in the Philadelphia market.
+      - region_type: city
+        region_name: Trenton
+        state_name: NJ
+        rationale: Corridor-adjacent city with potential commuting and substitution overlap.
+      - region_type: city
+        region_name: Reading
+        state_name: PA
+        rationale: Pennsylvania city surface for nearby regional context.
+      - region_type: city
+        region_name: Allentown
+        state_name: PA
+        rationale: Lehigh Valley city surface that may reflect nearby market substitution.
+      - region_type: city
+        region_name: Lancaster
+        state_name: PA
+        rationale: Nearby Pennsylvania city with plausible migration overlap.
+      - region_type: city
+        region_name: Harrisburg
+        state_name: PA
+        rationale: Secondary Pennsylvania city for broader nearby market comparison.
+      - region_type: city
+        region_name: Bethlehem
+        state_name: PA
+        rationale: Lehigh Valley city surface with similar corridor position.
+      - region_type: city
+        region_name: Norristown
+        state_name: PA
+        rationale: Close suburban city surface inside the Philadelphia orbit.
+      - region_type: city
+        region_name: Chester
+        state_name: PA
+        rationale: Nearby city surface with direct relevance to the Philadelphia area.
+      - region_type: msa
+        region_name: Allentown, PA
+        rationale: Nearby MSA comparator within eastern Pennsylvania.
+      - region_type: msa
+        region_name: Trenton, NJ
+        rationale: Adjacent commuter-region comparator.
+      - region_type: msa
+        region_name: Lancaster, PA
+        rationale: Nearby MSA comparator for central Pennsylvania context.
+      - region_type: msa
+        region_name: Reading, PA
+        rationale: Nearby MSA comparator for regional substitution pressure.
+      - region_type: msa
+        region_name: Harrisburg, PA
+        rationale: Broader Pennsylvania MSA context.
+      - region_type: msa
+        region_name: York, PA
+        rationale: Nearby Pennsylvania MSA for comparison.
+      - region_type: msa
+        region_name: Atlantic City, NJ
+        rationale: South Jersey MSA comparator with potential housing-market spillover.
+      - region_type: msa
+        region_name: Vineland, NJ
+        rationale: Southern New Jersey MSA in the broader Philadelphia orbit.
+      - region_type: msa
+        region_name: Dover, DE
+        rationale: Delaware MSA comparator near the Philadelphia commuter sphere.
+      - region_type: msa
+        region_name: Salisbury, MD
+        rationale: Mid-Atlantic comparator with some regional migration relevance.
+    nearest_rules:
+      - file: exploration/tmp/ontology/nearest_cities_to_philly_city.csv
+        top_n: 12
+        allowed_states: [PA, NJ, DE, MD]
+        min_overlap_months: 36
+        rationale: Add nearby city comparators that most closely track Philadelphia city rent growth.
+      - file: exploration/tmp/ontology/nearest_msas_to_philly_msa.csv
+        top_n: 8
+        allowed_states: [PA, NJ, DE, MD]
+        min_overlap_months: 36
+        rationale: Add nearby MSA comparators that most closely track the Philadelphia metro.
+      - file: exploration/tmp/ontology/nearest_zips_to_philly_msa.csv
+        top_n: 10
+        allowed_states: [PA, NJ, DE, MD]
+        min_overlap_months: 24
+        rationale: Add local ZIP comparators when the ZIP surface is available and sufficiently deep.
+
+  - layer: corridor_influence
+    exact_matches:
+      - region_type: city
+        region_name: New York
+        state_name: NY
+        rationale: Core Northeast corridor city comparator.
+      - region_type: city
+        region_name: Newark
+        state_name: NJ
+        rationale: New Jersey corridor city connected to NYC and Philadelphia.
+      - region_type: city
+        region_name: Jersey City
+        state_name: NJ
+        rationale: NYC-adjacent city surface for corridor behavior.
+      - region_type: city
+        region_name: Washington
+        state_name: DC
+        rationale: Core corridor city comparator to the south.
+      - region_type: city
+        region_name: Baltimore
+        state_name: MD
+        rationale: Major Mid-Atlantic corridor city comparator.
+      - region_type: city
+        region_name: Boston
+        state_name: MA
+        rationale: Northeast corridor city with strong macro housing relevance.
+      - region_type: city
+        region_name: Richmond
+        state_name: VA
+        rationale: Southern corridor city for broader eastern seaboard comparison.
+      - region_type: msa
+        region_name: New York, NY
+        rationale: NYC metro benchmark inside the corridor.
+      - region_type: msa
+        region_name: Washington, DC
+        rationale: DC metro benchmark inside the corridor.
+      - region_type: msa
+        region_name: Baltimore, MD
+        rationale: Baltimore metro comparator inside the corridor.
+      - region_type: msa
+        region_name: Boston, MA
+        rationale: Boston metro comparator for broader corridor context.
+      - region_type: msa
+        region_name: Richmond, VA
+        rationale: Richmond metro comparator for southern corridor context.
+
+  - layer: macro_benchmark
+    exact_matches:
+      - region_type: country
+        region_name: United States
+        rationale: National benchmark for overall market regime.
+      - region_type: msa
+        region_name: Los Angeles, CA
+        rationale: Major national housing market benchmark.
+      - region_type: msa
+        region_name: Chicago, IL
+        rationale: Large national metro benchmark with different market structure.
+      - region_type: msa
+        region_name: Dallas, TX
+        rationale: Large Sun Belt metro benchmark.
+      - region_type: msa
+        region_name: Houston, TX
+        rationale: Large Sun Belt metro benchmark with different supply profile.
+      - region_type: msa
+        region_name: Miami, FL
+        rationale: High-volatility national rent benchmark.
+      - region_type: msa
+        region_name: Atlanta, GA
+        rationale: Large Southeast metro benchmark.
+      - region_type: msa
+        region_name: Charlotte, NC
+        rationale: Southeast benchmark with regional migration relevance.

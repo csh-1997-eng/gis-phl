@@ -14,8 +14,8 @@ Audit source connectors and local probe artifacts.
 ## Expected Inputs
 
 - source-level metadata and contracts under `ingestion/sources/`
-- live probe report at `ingestion/tmp/minimal_samples/minimal_ingestion_report.json`
-- local sample files under `ingestion/tmp/source_samples/`
+- live probe report at `ingestion/tmp/samples/source_audit/minimal_ingestion_report.json`
+- local sample files under `ingestion/tmp/samples/`
 
 ## Expected Outputs
 
@@ -28,6 +28,8 @@ Audit source connectors and local probe artifacts.
 
 This audit is descriptive only. It should show what exists and what is callable now. It should not rank, score, or recommend.
 
+This code belongs to ingestion operations. The audit data it produces belongs under `ingestion/tmp/samples/source_audit/`.
+
 ## Run
 
 ```bash
@@ -36,7 +38,7 @@ uv run python ingestion/source_audit/analyze.py
 
 ## Outputs
 
-Artifacts are written to `ingestion/source_audit/artifacts/`.
+Artifacts are written to `ingestion/tmp/samples/source_audit/artifacts/`.
 
 Key tables:
 

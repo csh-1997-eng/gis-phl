@@ -6,15 +6,15 @@ This experiment isolates the Philadelphia city series and asks whether the same 
 
 ## Inputs
 
-- `ingestion/tmp/entities/apartment_market.csv`
-- `ingestion/tmp/entities/economic.csv`
+- `exploration/tmp/ontology/apartment_market.csv`
+- `exploration/tmp/ontology/economic.csv`
 
 ## Run
 
 ```bash
 uv run python experiments/exp_002_philly_consistent_baseline/src/train.py \
-  --apt-path ingestion/tmp/entities/apartment_market.csv \
-  --econ-path ingestion/tmp/entities/economic.csv \
+  --apt-path exploration/tmp/ontology/apartment_market.csv \
+  --econ-path exploration/tmp/ontology/economic.csv \
   --artifacts-dir experiments/exp_002_philly_consistent_baseline/artifacts \
   --train-end-date 2024-12-31
 ```
@@ -27,8 +27,8 @@ Example:
 
 ```bash
 uv run python experiments/exp_002_philly_consistent_baseline/src/train.py \
-  --apt-path ingestion/tmp/entities/apartment_market.csv \
-  --econ-path ingestion/tmp/entities/economic.csv \
+  --apt-path exploration/tmp/ontology/apartment_market.csv \
+  --econ-path exploration/tmp/ontology/economic.csv \
   --artifacts-dir experiments/exp_002_philly_consistent_baseline/artifacts \
   --train-end-date 2024-12-31 \
   --variant v2_clean_city_keys \

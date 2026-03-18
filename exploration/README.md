@@ -1,9 +1,11 @@
 # Exploration
 
-Everything related to EDA and source/entity understanding lives here.
+Everything related to ontology construction, ontology profiling, and open-ended source/entity understanding lives here.
 
 ## Layout
 
+- `ontology/`: domain-facing identity, crosswalk, fact, and manifest builders
+- `profiling/`: descriptive summaries of ontology coverage and quality
 - `notebooks/`: exploratory notebooks
 
 ## Notebooks
@@ -24,7 +26,11 @@ Then open:
 
 Use this section after:
 - `uv run python ingestion/minimal_ingest.py`
-- `uv run python ingestion/ontology/build_entities.py --source-dir ingestion/tmp/source_samples --output-dir ingestion/tmp/entities`
+- `uv run python exploration/ontology/build_entities.py --source-dir ingestion/tmp --source-layer samples --output-dir exploration/tmp/ontology`
+
+Core walkthroughs:
+- `exploration/ontology/README.md`
+- `exploration/profiling/README.md`
 
 ## Reproduce The Current Exploration Outputs
 

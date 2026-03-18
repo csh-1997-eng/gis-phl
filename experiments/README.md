@@ -48,8 +48,8 @@ These are separate experiment surfaces, not one cumulative pipeline. Run them ag
 
 All current experiments assume:
 
-- `ingestion/tmp/entities/apartment_market.csv`
-- `ingestion/tmp/entities/economic.csv`
+- `exploration/tmp/ontology/apartment_market.csv`
+- `exploration/tmp/ontology/economic.csv`
 
 Build those first from the ingestion workflow.
 
@@ -59,8 +59,8 @@ Build those first from the ingestion workflow.
 
 ```bash
 uv run python experiments/exp_001_baseline_rent_growth/src/train.py \
-  --apt-path ingestion/tmp/entities/apartment_market.csv \
-  --econ-path ingestion/tmp/entities/economic.csv \
+  --apt-path exploration/tmp/ontology/apartment_market.csv \
+  --econ-path exploration/tmp/ontology/economic.csv \
   --artifacts-dir experiments/exp_001_baseline_rent_growth/artifacts \
   --train-end-date 2024-12-31
 ```
@@ -69,8 +69,8 @@ uv run python experiments/exp_001_baseline_rent_growth/src/train.py \
 
 ```bash
 uv run python experiments/exp_002_philly_consistent_baseline/src/train.py \
-  --apt-path ingestion/tmp/entities/apartment_market.csv \
-  --econ-path ingestion/tmp/entities/economic.csv \
+  --apt-path exploration/tmp/ontology/apartment_market.csv \
+  --econ-path exploration/tmp/ontology/economic.csv \
   --artifacts-dir experiments/exp_002_philly_consistent_baseline/artifacts \
   --train-end-date 2024-12-31
 ```
@@ -79,8 +79,8 @@ uv run python experiments/exp_002_philly_consistent_baseline/src/train.py \
 
 ```bash
 uv run python experiments/exp_003_philly_region_zip_panel/src/train.py \
-  --apt-path ingestion/tmp/entities/apartment_market.csv \
-  --econ-path ingestion/tmp/entities/economic.csv \
+  --apt-path exploration/tmp/ontology/apartment_market.csv \
+  --econ-path exploration/tmp/ontology/economic.csv \
   --artifacts-dir experiments/exp_003_philly_region_zip_panel/artifacts \
   --train-end-date 2024-12-31
 ```

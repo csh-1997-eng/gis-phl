@@ -8,9 +8,9 @@ import pandas as pd
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_SOURCES_DIR = REPO_ROOT / "ingestion/sources"
-DEFAULT_SOURCE_SAMPLES_DIR = REPO_ROOT / "ingestion/tmp/source_samples"
-DEFAULT_MINIMAL_REPORT_PATH = REPO_ROOT / "ingestion/tmp/minimal_samples/minimal_ingestion_report.json"
-DEFAULT_OUTPUT_DIR = REPO_ROOT / "ingestion/source_audit/artifacts"
+DEFAULT_SOURCE_SAMPLES_DIR = REPO_ROOT / "ingestion/tmp/samples"
+DEFAULT_MINIMAL_REPORT_PATH = REPO_ROOT / "ingestion/tmp/samples/source_audit/minimal_ingestion_report.json"
+DEFAULT_OUTPUT_DIR = REPO_ROOT / "ingestion/tmp/samples/source_audit/artifacts"
 
 REPORT_NAME_MAP = {
     "septa_gtfs": ("septa_gtfs",),

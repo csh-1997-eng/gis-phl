@@ -22,8 +22,8 @@ from investigations.plotting import (
 import matplotlib.pyplot as plt
 
 
-DEFAULT_APT_PATH = REPO_ROOT / "ingestion/tmp/entities/apartment_market.csv"
-DEFAULT_GEO_PATH = REPO_ROOT / "ingestion/tmp/entities/geographic.csv"
+DEFAULT_APT_PATH = REPO_ROOT / "exploration/tmp/ontology/apartment_market.csv"
+DEFAULT_GEO_PATH = REPO_ROOT / "exploration/tmp/ontology/geographic.csv"
 DEFAULT_OUTPUT_DIR = REPO_ROOT / "investigations/inv_001_target_behavior/artifacts"
 TARGET_COLUMN = "rent_growth_1m"
 HORIZONS = (1, 3, 6, 12)

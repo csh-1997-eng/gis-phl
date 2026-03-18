@@ -24,8 +24,8 @@ from sources.septa_gtfs.probe import probe as probe_septa_gtfs
 from sources.septa_gtfs_rt.probe import probe as probe_septa_gtfs_rt
 from sources.zillow.probe import probe as probe_zillow
 
-DEFAULT_OUTPUT_DIR = Path("ingestion/tmp/minimal_samples")
-DEFAULT_TMP_DIR = Path("ingestion/tmp/source_samples")
+DEFAULT_OUTPUT_DIR = Path("ingestion/tmp/samples/source_audit")
+DEFAULT_TMP_DIR = Path("ingestion/tmp/samples")
 
 
 def run_all(output_dir: Path, tmp_dir: Path) -> list[FetchResult]:
@@ -72,7 +72,7 @@ def main() -> int:
         "--output-dir",
         type=Path,
         default=DEFAULT_OUTPUT_DIR,
-        help="Directory where ingestion report is written",
+        help="Directory where the source-audit report is written",
     )
     parser.add_argument(
         "--tmp-dir",

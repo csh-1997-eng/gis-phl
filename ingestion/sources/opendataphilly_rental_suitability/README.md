@@ -10,4 +10,4 @@ Source-specific ingestion contract.
 ## Next Steps
 - add `probe.py` endpoint checks
 - add `parse.py` row/payload normalization helpers
-- connect mapper output to `ingestion/ontology/`
+- connect mapper output to `exploration/ontology/`

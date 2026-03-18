@@ -14,8 +14,8 @@ Understand the behavior of the rent-growth target before changing features or mo
 
 ## Inputs
 
-- `ingestion/tmp/entities/apartment_market.csv`
-- `ingestion/tmp/entities/geographic.csv`
+- `exploration/tmp/ontology/apartment_market.csv`
+- `exploration/tmp/ontology/geographic.csv`
 
 ## Outputs
 

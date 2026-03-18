@@ -3,8 +3,8 @@ from __future__ import annotations
 import csv
 from pathlib import Path
 
-from ingestion.ontology.map_to_entities import map_zori_observation_to_apartment_market
-from ingestion.ontology.map_to_entities import load_zori_apartment_market_entities_from_csv
+from exploration.ontology.map_to_entities import map_zori_observation_to_apartment_market
+from exploration.ontology.map_to_entities import load_zori_apartment_market_entities_from_csv
 
 
 def test_zori_city_geography_id_uses_region_id_not_name_slug() -> None:

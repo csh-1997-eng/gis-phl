@@ -26,7 +26,7 @@ The standard for this repo is research quality before model complexity. Strong f
                       ▼   │         │ updates                 │      │ Evaluation │
               ┌──────────┐│         │ understanding           │      │            │
               │ Ontology ││         ▼                         │      └────────────┘
-              │ Entities │├──►┌─────────────┐─────────────────┼─────────►  ▲
+              │   Facts  │├──►┌─────────────┐─────────────────┼─────────►  ▲
               └──────────┘│   │ Experiments │                 │            │
                           │   └─────────────┘                 │   context  │
                           │                                   ├────────────┘
@@ -35,14 +35,15 @@ The standard for this repo is research quality before model complexity. Strong f
 
 | Stage | Purpose |
 |---|---|
-| **Ingestion** | Acquire raw data and transform it into standardized entities via the ontology |
+| **Ingestion** | Acquire and store raw source data by maturity layer |
+| **Exploration** | Build ontology fact tables and profile dataset quality before formal research work |
 | **Investigations** | Structured analysis of data behavior, coverage, and assumptions |
 | **Experiments** | Reproducible model runs with explicit hypotheses and evaluation plans |
 | **Evaluation** | Compare model performance against expected outcomes informed by project goals and investigation findings |
 
 ## Project Structure
 
-- [exploration](exploration): open-ended discovery and rough notebooks
+- [exploration](exploration): ontology, profiling, and open-ended discovery
 - [investigations](investigations): structured follow-up work that is not yet a formal experiment
 - [experiments](experiments): reproducible runs with explicit hypotheses and evaluation plans
 - [evaluation](evaluation): cross-experiment comparison and synthesis
@@ -82,20 +83,21 @@ uv sync --all-groups
 ```bash
 uv run python ingestion/minimal_ingest.py
 ```
-- Build ontology entity tables:
+- Build ontology fact tables:
 ```bash
-uv run python ingestion/ontology/build_entities.py \
-  --source-dir ingestion/tmp/source_samples \
-  --output-dir ingestion/tmp/entities
+uv run python exploration/ontology/build_entities.py \
+  --source-dir ingestion/tmp \
+  --source-layer samples \
+  --output-dir exploration/tmp/ontology
 ```
-- Manual cleanup (keep only ontology entity outputs in `ingestion/tmp/entities`):
+- Manual cleanup (keep only ontology outputs in `exploration/tmp/ontology`):
 ```bash
 ./ingestion/scripts/cleanup_tmp_keep_entities.sh
 ```
 
 ## Reproduce Current Work
 
-1. Build source samples and ontology entities.
+1. Build source samples and ontology fact tables.
 
 Use the ingestion commands above.
 

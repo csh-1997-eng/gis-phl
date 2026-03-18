@@ -6,15 +6,15 @@ This experiment moves to ZIP-level panel data in the Philadelphia regional footp
 
 ## Inputs
 
-- `ingestion/tmp/entities/apartment_market.csv`
-- `ingestion/tmp/entities/economic.csv`
+- `exploration/tmp/ontology/apartment_market.csv`
+- `exploration/tmp/ontology/economic.csv`
 
 ## Run
 
 ```bash
 uv run python experiments/exp_003_philly_region_zip_panel/src/train.py \
-  --apt-path ingestion/tmp/entities/apartment_market.csv \
-  --econ-path ingestion/tmp/entities/economic.csv \
+  --apt-path exploration/tmp/ontology/apartment_market.csv \
+  --econ-path exploration/tmp/ontology/economic.csv \
   --artifacts-dir experiments/exp_003_philly_region_zip_panel/artifacts \
   --train-end-date 2024-12-31
 ```
@@ -27,8 +27,8 @@ Example:
 
 ```bash
 uv run python experiments/exp_003_philly_region_zip_panel/src/train.py \
-  --apt-path ingestion/tmp/entities/apartment_market.csv \
-  --econ-path ingestion/tmp/entities/economic.csv \
+  --apt-path exploration/tmp/ontology/apartment_market.csv \
+  --econ-path exploration/tmp/ontology/economic.csv \
   --artifacts-dir experiments/exp_003_philly_region_zip_panel/artifacts \
   --train-end-date 2024-12-31 \
   --variant v1_baseline_linear \

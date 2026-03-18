@@ -7,8 +7,8 @@ Can lagged rent signals plus unemployment explain next-month rent growth at the 
 A simple linear baseline using lagged rent features and unemployment should outperform a naive `lag1` predictor on MAE/RMSE.
 
 ## Data Inputs
-- `ingestion/tmp/entities/apartment_market.csv`
-- `ingestion/tmp/entities/economic.csv`
+- `exploration/tmp/ontology/apartment_market.csv`
+- `exploration/tmp/ontology/economic.csv`
 
 ## Target
 - `target_next_rent_growth_1m`: next month `rent_growth_1m` per `geography_entity_id`
@@ -56,8 +56,8 @@ See `METHODOLOGY.md` for a full writeup of current assumptions, known inconsiste
 
 ```bash
 uv run python experiments/exp_001_baseline_rent_growth/src/train.py \
-  --apt-path ingestion/tmp/entities/apartment_market.csv \
-  --econ-path ingestion/tmp/entities/economic.csv \
+  --apt-path exploration/tmp/ontology/apartment_market.csv \
+  --econ-path exploration/tmp/ontology/economic.csv \
   --artifacts-dir experiments/exp_001_baseline_rent_growth/artifacts \
   --train-end-date 2024-12-31
 ```

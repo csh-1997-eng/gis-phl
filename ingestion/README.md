@@ -1,6 +1,6 @@
 # Ingestion
 
-This folder contains source-level ingestion contracts and ontology mapping into canonical entities.
+This folder contains source-level ingestion contracts and raw-data acquisition only.
 
 ## Data Sources
 
@@ -22,9 +22,11 @@ This folder contains source-level ingestion contracts and ontology mapping into 
 ## Layout
 
 - `sources/`: one subfolder per source with request/response inspection code
-- `ontology/`: canonical entity definitions and mapping code
 - `source_audit/`: descriptive audit of connector state, live probe status, and local sample coverage
 - `minimal_ingest.py`: lightweight cross-source probe for connector health
+- `tmp/samples/`: structured probe samples and source-audit outputs
+- `tmp/targeted_extracts/`: intentional source extracts for a specific research need
+- `tmp/full_extracts/`: complete raw extracts when full representation is needed
 
 ## Run
 
@@ -36,17 +38,33 @@ Optional output and temp directories:
 
 ```bash
 uv run python ingestion/minimal_ingest.py \
-  --output-dir ingestion/tmp/minimal_samples \
-  --tmp-dir ingestion/tmp/source_samples
+  --output-dir ingestion/tmp/samples/source_audit \
+  --tmp-dir ingestion/tmp/samples
 ```
 
 ## Output
 
-- report: `ingestion/tmp/minimal_samples/minimal_ingestion_report.json`
-- per-source samples: `ingestion/tmp/source_samples/<source_name>/`
+- report: `ingestion/tmp/samples/source_audit/minimal_ingestion_report.json`
+- per-source samples: `ingestion/tmp/samples/<source_name>/`
 
 The report records per-source status, metadata, and small sample rows/bytes.
-Promote stable datasets to `data/` only when ingestion logic is validated.
+Raw data should stay under `ingestion/tmp/`. Commit only important downstream artifacts.
+
+## Capture a Larger Zillow City/MSA Surface
+
+Use this when the probe samples are no longer sufficient and the target surface needs a fuller state-filtered Zillow extract.
+
+```bash
+uv run python ingestion/sources/zillow/extract_state_filtered.py \
+  --states PA NJ DE MD NY CT VA MA DC \
+  --dataset-keys city metro
+```
+
+This writes:
+- targeted filtered files into `ingestion/tmp/targeted_extracts/zillow/`
+- optional full raw files into `ingestion/tmp/full_extracts/zillow/`
+
+Downstream ontology builds prefer richer targeted/full files over older sample heads when both are present.
 
 ## Audit Source Connectors
 
@@ -57,25 +75,26 @@ uv run python ingestion/source_audit/analyze.py
 ```
 
 Outputs:
-- `ingestion/source_audit/artifacts/source_inventory.csv`
-- `ingestion/source_audit/artifacts/source_probe_results.csv`
-- `ingestion/source_audit/artifacts/source_sample_inventory.csv`
-- `ingestion/source_audit/artifacts/source_audit_summary.csv`
+- `ingestion/tmp/samples/source_audit/artifacts/source_inventory.csv`
+- `ingestion/tmp/samples/source_audit/artifacts/source_probe_results.csv`
+- `ingestion/tmp/samples/source_audit/artifacts/source_sample_inventory.csv`
+- `ingestion/tmp/samples/source_audit/artifacts/source_audit_summary.csv`
 
-## Build Ontology Entities
+## Hand Off To Exploration
 
-After source probes generate samples, build canonical entity tables:
+After raw source data is in place, build ontology fact tables from the exploration layer:
 
 ```bash
-uv run python ingestion/ontology/build_entities.py \
-  --source-dir ingestion/tmp/source_samples \
-  --output-dir ingestion/tmp/entities
+uv run python exploration/ontology/build_entities.py \
+  --source-dir ingestion/tmp \
+  --source-layer samples \
+  --output-dir exploration/tmp/ontology
 ```
 
 Outputs:
-- `ingestion/tmp/entities/geographic.csv`
-- `ingestion/tmp/entities/economic.csv`
-- `ingestion/tmp/entities/apartment_market.csv`
+- `exploration/tmp/ontology/geographic.csv`
+- `exploration/tmp/ontology/economic.csv`
+- `exploration/tmp/ontology/apartment_market.csv`
 
 `apartment_market.csv` now preserves Zillow geography metadata:
 - `region_type` (for example `msa`, `city`, `zip`)
@@ -83,35 +102,22 @@ Outputs:
 - `state_name`
 - `source_dataset`
 
-## Audit Geography Granularity
+## Build a Theory-Labeled Zillow Sample
 
-Use this to verify how many geographies you have at each level and which Philadelphia geographies are available:
+Use this to define a Philadelphia-centered Zillow universe by mechanism rather than by a raw state list.
+
+Edit the design in `exploration/ontology/zillow_theory_sample.yaml`, then build the realized manifest:
 
 ```bash
-uv run python ingestion/ontology/audit_geographic_granularity.py \
-  --apt-path ingestion/tmp/entities/apartment_market.csv \
-  --output-dir ingestion/tmp/entities
+uv run python exploration/ontology/build_zillow_theory_sample.py
 ```
 
 Outputs:
-- `ingestion/tmp/entities/granularity_summary.csv`
-- `ingestion/tmp/entities/philly_geographies.csv`
-
-## Find Expansion Candidates (City/MSA/ZIP)
-
-Use this to surface ZIP availability in surrounding states and rank nearby city/MSA/ZIP series by similarity to Philadelphia trends:
-
-```bash
-uv run python ingestion/ontology/find_expansion_candidates.py \
-  --apt-path ingestion/tmp/entities/apartment_market.csv \
-  --output-dir ingestion/tmp/entities
-```
-
-Outputs:
-- `ingestion/tmp/entities/regional_zip_inventory.csv`
-- `ingestion/tmp/entities/nearest_cities_to_philly_city.csv`
-- `ingestion/tmp/entities/nearest_msas_to_philly_msa.csv`
-- `ingestion/tmp/entities/nearest_zips_to_philly_msa.csv`
+- `exploration/tmp/ontology/zillow_theory_sample_manifest.csv`
+- `exploration/tmp/ontology/zillow_theory_sample_summary.csv`
+- `exploration/tmp/ontology/zillow_theory_sample_unmatched.csv`
+- `exploration/tmp/ontology/apartment_market_theory_sample.csv`
+- `exploration/tmp/ontology/geographic_theory_sample.csv`
 
 ## Manual Cleanup (Keep Entities Only)
 

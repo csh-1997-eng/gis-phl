@@ -1,8 +1,0 @@
-metric,value
-source_count,13
-sources_with_readme,13
-sources_with_probe_script,13
-sources_with_local_samples,13
-sources_live_probe_ok,13
-sources_live_probe_blocked_by_ssl,0
-sources_live_probe_failed_otherwise,0
